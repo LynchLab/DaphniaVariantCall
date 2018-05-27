@@ -10,7 +10,7 @@ $ref_genome="PA42.4.0";
 #$Adapters="/PATH/TO/Adapters.fa";
 $Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
 
-#Save all your raw reads in the DATA_DIR in a sub dir named as SampleID
+#Save all your raw reads in the DATA_DIR in a sub dir named as SampleID/fastq/
 #Name you files like: 
 #SampleID-001-R1.fastq
 #SampleID-001-R2.fastq
@@ -50,18 +50,18 @@ while ($n<=$MaxNumberofSamples) {
 	$nstr001= sprintf ("%03d", $n);
 	print $nstr001.": ";
 		$Sample=$DATA_DIR."/".$SampleID."-".$nstr001;
-		$Sample_R1=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R1.fastq";
-		$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2.fastq";
+		$Sample_R1=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R1";
+		$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2";
 		$OUTPUT_DIR=$DATA_DIR."/Bwa";
 		$OUTPUT=$OUTPUT_DIR."/".$SampleID."-".$nstr001;
-	print $Sample_R1."/R2.fastq";
-	if(-e $Sample_R1 && -e $Sample_R2){  
+	print $Sample_R1.".fastq";
+	if(-e $Sample_R1".fastq" && -e $Sample_R2".fastq"){  
 		print ", Okay, this pair-end reads fastq file is found! lets make a pbs file:";  
 		$n1=$n1+1;	
 		
 		$pbsfile=$DATA_DIR."/bwa-".$SampleID."-".$nstr001.".pbs";
 		print $pbsfile."\n";
-		print OUT1 "\nqsub ".$pbsfile;			
+		print OUT1 "qsub ".$pbsfile."\n\n";			
 		open OUT, ">$pbsfile" or die "cannot open file: $!";
 		print OUT 
 		"	#!/bin/bash	
@@ -85,7 +85,7 @@ while ($n<=$MaxNumberofSamples) {
 
 			# 1. After preparing the FASTA file of adapter sequences, trim adapter sequences from sequence reads.
 			module load java
-			java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=~/tmp -jar $Trimmomatic PE $Sample_R1 $Sample_R2 $Sample_R1-paired.fq $Sample_R1-unpaired.fq $Sample_R2-paired.fq $Sample_R2-unpaired.fq  HEADCROP:3 ILLUMINACLIP:$Adapters:2:30:10:2 SLIDINGWINDOW:4:15 MINLEN:30
+			java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=~/tmp -jar $Trimmomatic PE $Sample_R1.fastq $Sample_R2.fastq $Sample_R1-paired.fq $Sample_R1-unpaired.fq $Sample_R2-paired.fq $Sample_R2-unpaired.fq  HEADCROP:3 ILLUMINACLIP:$Adapters:2:30:10:2 SLIDINGWINDOW:4:15 MINLEN:30
 
 			# 3. Map reads to the reference sequence and output bam file.
 
