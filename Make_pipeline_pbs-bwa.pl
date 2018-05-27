@@ -140,6 +140,9 @@ while ($n<=$MaxNumberofSamples) {
 	}  
 }
 print "\n\nTotal number pbs files produced:".$n1."\n\n\n";
+print "To submit all of the pbs jobs, type the following commands: \n\n";
+print "chmod 755 $DATA_DIR/qsub_all_pbs.sh  \n\n";
+print "$DATA_DIR/qsub_all_pbs.sh  \n\n";
 
 
 
