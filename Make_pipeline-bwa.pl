@@ -1,7 +1,7 @@
 #! /bin/usr/perl -w
 
 #ref_genome index path and file
-$workdir="/N/u/xw63/Carbonate/daphnia/DaphniaVariantCall";
+$workdir="/N/u/xw63/Carbonate/daphnia/genome_index";
 $ref_genome="PA42.4.1";
 
 # The adapter file: an example (Bioo_Adapters.fa) can be found in the same directory ($workdir)
