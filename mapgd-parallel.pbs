@@ -7,18 +7,33 @@
 #PBS -m abe
 #PBS -j oe
 
-# Updated on 05/28/2018
-
-set +x 
+set +x
+echo PBS -N mapgd-debug
+echo PBS -k o
+echo PBS -l nodes=1:ppn=16,walltime=12:00:00
+echo PBS -l vmem=100gb
+echo PBS -M ouqd@hotmail.com
+echo PBS -m abe
+echo PBS -j oe
+echo Updated on 05/28/2018
+echo module rm gcc
+echo module load gcc
+echo module load gsl
+echo module load samtools
 module rm gcc
 module load gcc
 module load gsl  
+module load samtools
+
 
 export SampleID=PA2013
 export DATA_DIR=/N/dc2/scratch/xw63/$SampleID/Bwa
 export HeaderFile=$DATA_DIR/PA42.header
 
-module load samtools
+echo SampleID=PA2013
+echo DATA_DIR=/N/dc2/scratch/xw63/$SampleID/Bwa
+echo HeaderFile=$DATA_DIR/PA42.header
+
 set -x
 cd $DATA_DIR
 set +x
@@ -26,8 +41,8 @@ echo ===============================================================
 echo 0. Make proview files of nucleotide-read quartets -counts of A, C, G, and T, from each of the mpileup files of the clones of the population.
 echo ===============================================================
 echo This should be done before submitting this task by using the following commands:
-echo  perl Make_pipeline.mapgd.pl
-echo  qsub ./mapgd_proview.pbs
+echo  '              perl Make_pipeline.mapgd.pl'
+echo  '              qsub ./mapgd_proview.pbs'
 set +x
 
 echo ===============================================================
@@ -42,8 +57,8 @@ echo ===============================================================
 echo if mtDNA sequence is not included in the reference genome, skip this step:
 echo if mtDNA sequence is included in the reference genome, execute this:
 set -x
-#time grep -v '^PA42_mt_genome' $SampleID.combined.pro.txt > Nuc_$SampleID.combined.pro.txt
-#mv Nuc_$SampleID.combined.Pro.txt $SampleID.combined.pro.txt
+echo "time grep -v '^PA42_mt_genome' $SampleID.combined.pro.txt \> Nuc_$SampleID.combined.pro.txt"
+echo "mv Nuc_$SampleID.combined.Pro.txt $SampleID.combined.pro.txt"
 set +x
 
 echo ===============================================================
@@ -57,7 +72,7 @@ echo ===============================================================
 echo 4. Run the filter command to filter the map file of ML estimates of the parameters.
 echo ===============================================================
 set -x
-time mapgd filter -i $DATA_DIR/$SampleID.combined.map.map -p 20 -q 0.05 -Q 0.45 -c 800 -C 2400 -o $DATA_DIR/$SampleID.combined-filtered.map
+time mapgd filter -i $DATA_DIR/$SampleID.combined.map.map -p 20 -q 0.05 -Q 0.45 -c 800 -C 2400 -o $DATA_DIR/$SampleID.combined_filtered.map
 set +x
 echo -p: minimum value of the likelihood-ratio test statistic for polymorphism 
 echo -q: minimum minor-allele frequency estimate
@@ -68,7 +83,7 @@ echo ===============================================================
 echo 5. Run the genotype command to generate a file of genotype likelihoods
 echo ===============================================================
 set -x
-time mapgd genotype -p $DATA_DIR/$SampleID.combined.clean.pro -m $DATA_DIR/$SampleID.combined-filtered.map.map > $DATA_DIR/$SampleID.combined.genotype
+time mapgd genotype -p $DATA_DIR/$SampleID.combined.clean.pro -m $DATA_DIR/$SampleID.combined_filtered.map.map > $DATA_DIR/$SampleID.combined.genotype
 set +x
 
 echo ===============================================================
