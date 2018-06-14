@@ -115,6 +115,9 @@ try{
 	
 	BufferedWriter out=new BufferedWriter(new FileWriter(output));
 
+	System.out.println(rec[1]+"<-- head");
+	out.write(rec[1]+"\n");			
+
 	//loop before the headline: copy the head 	
 	int i=0;
 	while((rec[1]=br[1].readLine()) != null){
@@ -123,8 +126,8 @@ try{
 		
 		for(int j=2;j<=Nf;j++)
 		{
-			//rec[j]=br[j].readLine();
-			if (rec[j]!= null) {rec[j]=rec[j].trim();}
+			rec[j]=br[j].readLine();
+			//if (rec[j]!= null) {rec[j]=rec[j].trim();}
 		}
 		
 		int P1=rec[1].indexOf("ID0"); //headline
@@ -176,6 +179,7 @@ try{
 		for(int j=2;j<=Nf;j++)
 		{
 			rec[j]=br[j].readLine();
+			//if (rec[j]!= null) {rec[j]=rec[j].trim();}
 		}
 	
 			int Q1=rec[1].indexOf("scaffold");
@@ -204,7 +208,7 @@ try{
 			}
 			
 	}
-	System.out.println("    "+i+"Lines combined.");
+	System.out.println("  In total "+i+" Lines combined.");
 	out.close();
 		
 	System.out.print("All mapgd proview files were combined and saved as:\n "+output);
