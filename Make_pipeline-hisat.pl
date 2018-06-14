@@ -6,7 +6,7 @@ $ref_genome="PA42.4.1";
 
 # The adapter file: an example (Bioo_Adapters.fa) can be found in the same directory ($workdir)
 #$Adapters="/PATH/TO/Adapters.fa";
-$Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
+$Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
 
 #Save all your raw reads in the DATA_DIR in a sub dir named as SampleID/fastq/
 #Name you files like: 
@@ -55,7 +55,7 @@ if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){
 	print ", Okay, this pair-end reads fastq file is found! lets make a pbs file:"; 
 	$n1=$n1+1;	
 
-	$pbsfile=$DATA_DIR."/hisat-".$SampleID."-".$nstr001.".pbs";
+	$pbsfile=$DATA_DIR."/pbs/hisat-".$SampleID."-".$nstr001.".pbs";
 	print $pbsfile."\n";
 	print OUT1 "\nqsub ".$pbsfile;			
 

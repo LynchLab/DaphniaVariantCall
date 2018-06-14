@@ -37,9 +37,9 @@ try{
 	String Com_Pro="";
 	String DataDir=args[0];
 	int L0=args[0].length();
-	if (DataDir.substring(L0,L0)=="/"){DataDir=DataDir.substring(0,L0-1);}
+	if (DataDir.substring(L0)=="/"){DataDir=DataDir.substring(0,L0-1);}
 	String SampleID=args[1];
-	String output=DataDir+"/"+SampleID+"-combined.pro.txt";
+	String output=DataDir+"/"+SampleID+".combined.pro.txt";
 
 	System.out.println("Reading proview file");
 	int MaxNumOfProveiws=150;
@@ -49,6 +49,11 @@ try{
 	//Looking for the pro.txt files in the data directory
 	
 	File file=new File(DataDir);
+	if (!file.isDirectory()) 
+	{
+		System.out.println("Error: "+DataDir+" is not a directory, program will now exit. ");
+		System.exit(0);
+	}		
 	File[] FileList = file.listFiles();
 	Arrays.sort(FileList);
 	String[] AllFiles=new String [FileList.length+1];
@@ -59,7 +64,7 @@ try{
 	   if (FileList[i].isFile()) {
 			AllFiles[i]=FileList[i].toString();
 			//System.out.println(" reading File:"+i+": "+ AllFiles[i]);
-			if(AllFiles[i].indexOf(".pro.txt")>0&&AllFiles[i].indexOf("combined.pro.txt")<0) {
+			if(AllFiles[i].indexOf(".proview")>0&&AllFiles[i].indexOf("combined")<0) {
 				Nf++;//Number of proview files found
 				ProFiles[Nf]=AllFiles[i];
 				fr[Nf]=new FileReader(ProFiles[Nf]);
@@ -70,11 +75,18 @@ try{
 				//System.out.println(AllFiles[i]+" is not a proview file.");
 			}
 	   }
-	   if (FileList[i].isDirectory()) {
-		System.out.println(FileList[i]+"is a sub directory, ignored.");
+	   if (FileList[i].isDirectory()) 
+	   {
+			System.out.println(FileList[i]+" is a sub directory, ignored.");
 	   }
 	}
-		
+	if (Nf<1) 
+	{
+		System.out.println("Error: no proview files found, program will now exit. ");
+		System.exit(0);
+	}		
+	
+	int Nf1=Nf;	
 	System.out.println(" Number of proview files  found: "+Nf);
 	for(int j=1;j<=Nf;j++)
 	{
@@ -91,19 +103,28 @@ try{
 		}
 		else
 		{
-			System.out.println("Error: "+ProFiles[j]+" is not a valid mapgd proview file, program will now exit. Please remove or rename this file and try again.");
-			System.exit(0);
+			Nf1--;
+			System.out.println("Error: "+ProFiles[j]+" is not a valid mapgd proview file. ");
 		}
 	}
+	if (Nf1<Nf) 
+	{
+		System.out.println("Error: as show in the above, one or more of the proview files are invalid, program will now exit.Please remove the invalid file(s) and try again. ");
+		System.exit(0);
+	}		
 	
 	BufferedWriter out=new BufferedWriter(new FileWriter(output));
+
+	//loop before the headline: copy the head 	
 	int i=0;
-	//loop before the headline, copy the head 	
 	while((rec[1]=br[1].readLine()) != null){
+		
+		//rec[1]=rec[1].trim();
 		
 		for(int j=2;j<=Nf;j++)
 		{
-			rec[j]=br[j].readLine();
+			//rec[j]=br[j].readLine();
+			if (rec[j]!= null) {rec[j]=rec[j].trim();}
 		}
 		
 		int P1=rec[1].indexOf("ID0"); //headline
@@ -111,15 +132,31 @@ try{
 		int P3=rec[1].indexOf("REF"); //headline
 		int P4=rec[1].lastIndexOf("\t");
 		
-		if(P1>=0&&P2>P1&&P3>P2)//is headline
+		if(P1>=0&&P2>P1&&P3>P2)//is headline of the data
 		{
+			System.out.println(rec[1]+"<-- headline 1");
 			Com_Pro=rec[1];
 			for(int j=2;j<=Nf;j++) //combine the headlines
 			{
-				Proview[j]=rec[j].substring(P4,rec[j].length());
-				Com_Pro+=Proview[j];
+				if (rec[j]!= null) 
+				{
+					System.out.println(rec[j]+"<-- headline "+j);
+					int P5=rec[j].indexOf(":");
+					int P6=rec[j].lastIndexOf(":");
+					if (P5==P6)   
+					{
+						Proview[j]=rec[j].substring(P4);
+						Com_Pro+=Proview[j];
+					} 
+					else
+					{
+						System.out.println("Error: "+ProFiles[j]+" contains two or more clones, it is excluded. the input .proview files in this directory must be produced from a single .mpileup file by using 'mapgd proview'.");
+						//System.out.println(" program will exit ");
+						//System.exit(0);
+					}
+				}
 			}
-			System.out.println(Com_Pro+"<-- headline");
+			System.out.println(Com_Pro+"<-- combined headline");
 			out.write(Com_Pro+"\n");
 			break;
 		}
@@ -129,8 +166,12 @@ try{
 			out.write(rec[1]+"\n");			
 		}
 	}
-	//loop after the headline
+	
+	//loop after the headline: combine the data from each profile
+	
 	while((rec[1]=br[1].readLine()) != null){
+		
+		//rec[1]=rec[1].trim();
 		
 		for(int j=2;j<=Nf;j++)
 		{
@@ -147,8 +188,11 @@ try{
 				Com_Pro=rec[1];
 				for(int j=2;j<=Nf;j++) //combine data for each line
 				{
-					Proview[j]=rec[j].substring(Q3,rec[j].length());
-					Com_Pro+=Proview[j];
+					if (rec[j]!= null) 
+					{
+						Proview[j]=rec[j].substring(Q3);
+						Com_Pro+=Proview[j];
+					}
 				}
 				if (i%1000000==0){System.out.println(" "+i+" Lines combined.");}
 				out.write(Com_Pro+"\n");
@@ -158,6 +202,7 @@ try{
 				System.out.println(rec[1]+"--> tail");
 				out.write(rec[1]+"\n");			
 			}
+			
 	}
 	System.out.println("    "+i+"Lines combined.");
 	out.close();
@@ -165,14 +210,11 @@ try{
 	System.out.print("All mapgd proview files were combined and saved as:\n "+output);
 		 
 	}catch(Exception e){
-		System.out.println("\nThis program is to combine multiple mapgd  proview output files (SampleID-*.pro.txt) into one single file named SampleID-combined.pro.txt\n"); 
+		System.out.println("\nThis program is to combine multiple mapgd  proview output files (SampleID-*.pro.txt) into one single file named SampleID.combined.pro.txt\n"); 
 		System.out.println("\nUsage: Java -cp ./ CombineProview </Path/To/proview_files> <SampleID>\n"); 
 		System.out.println(e);
 		e.printStackTrace();
 	}
 }
-//public static int countOf (String s, char c) {
-//    return s.length() - s.replace(c, "").length();
-//}
 
 }

@@ -1,0 +1,225 @@
+#!/bin/bash 
+#PBS -N mapgd-proview
+#PBS -k o
+#PBS -l nodes=1:ppn=16,walltime=6:00:00
+#PBS -l vmem=100gb
+#PBS -M ouqd@hotmail.com
+#PBS -m abe
+#PBS -j oe
+
+# Updated on 05/28/2018
+
+set +x 
+module rm gcc
+module load gcc
+module load gsl  
+
+module load samtools
+set -x
+cd /N/dc2/scratch/xw63/PA2013/Bwa
+set +x
+echo ===============================================================
+echo 0. Make a header file
+echo ===============================================================
+set -x
+samtools view -H /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-001-RG_Sorted_dedup_realigned_Clipped.bam > /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header
+set +x
+echo ===============================================================
+echo 1. Make a pro file of nucleotide-read quartets -counts of A, C, G, and T, from the mpileup files of the clones.
+echo ===============================================================
+set -x
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-000.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-000.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-001.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-001.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-002.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-002.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-003.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-003.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-004.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-004.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-005.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-005.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-006.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-006.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-007.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-007.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-008.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-008.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-012.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-012.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-013.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-013.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-014.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-014.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-015.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-015.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-016.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-016.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-018.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-018.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-020.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-020.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-021.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-021.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-022.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-022.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-023.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-023.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-024.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-024.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-025.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-025.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-026.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-026.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-027.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-027.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-028.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-028.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-029.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-029.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-030.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-030.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-031.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-031.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-032.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-032.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-033.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-033.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-034.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-034.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-035.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-035.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-036.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-036.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-037.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-037.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-038.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-038.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-039.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-039.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-040.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-040.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-041.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-041.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-042.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-042.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-043.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-043.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-044.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-044.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-045.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-045.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-046.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-046.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-049.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-049.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-050.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-050.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-051.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-051.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-053.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-053.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-054.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-054.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-055.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-055.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-056.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-056.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-057.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-057.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-058.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-058.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-060.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-060.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-061.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-061.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-062.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-062.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-063.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-063.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-065.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-065.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-066.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-066.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-067.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-067.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-068.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-068.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-069.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-069.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-070.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-070.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-071.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-071.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-072.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-072.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-073.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-073.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-074.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-074.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-075.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-075.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-076.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-076.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-078.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-078.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-079.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-079.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-080.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-080.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-081.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-081.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-082.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-082.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-083.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-083.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-085.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-085.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-086.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-086.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-087.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-087.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-089.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-089.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-090.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-090.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-091.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-091.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-093.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-093.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-094.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-094.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-096.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-096.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-097.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-097.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-098.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-098.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-099.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-099.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-100.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-100.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-101.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-101.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-103.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-103.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-105.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-105.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-106.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-106.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-107.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-107.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-108.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-108.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-110.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-110.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-111.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-111.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-112.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-112.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-113.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-113.proview &
+
+mapgd proview -i /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-114.mpileup -H /N/dc2/scratch/xw63/PA2013/Bwa/PA42.header > /N/dc2/scratch/xw63/PA2013/Bwa/PA2013-114.proview &
+
+wait
