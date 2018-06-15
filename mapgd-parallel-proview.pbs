@@ -22,7 +22,7 @@ echo ===============================================================
 echo 0. Make a header file
 echo ===============================================================
 set -x
-samtools view -H PA2013-001-RG_Sorted_dedup_realigned_Clipped.bam > /N/dc2/scratch/xw63/PA2013/Bwa/mpileup/PA42.header
+time samtools view -H PA2013-001-RG_Sorted_dedup_realigned_Clipped.bam > /N/dc2/scratch/xw63/PA2013/Bwa/mpileup/PA42.header
 set +x
 echo ===============================================================
 echo 1. Make a pro file of nucleotide-read quartets -counts of A, C, G, and T, from the mpileup files of the clones.
