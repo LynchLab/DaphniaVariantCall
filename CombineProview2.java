@@ -1,19 +1,17 @@
 /*
 ======================================================================
-CombineProview
+CombineProview2: Combine all mapgd proview files into one
 
-Usage: Combine all mapgd proview files into one
- 
-Java -cp ./ CombineProview </Path/To/proview_files> <SampleID>
+Usage: 
+	Java -cp ./ CombineProview2 </Path/To/input_proview_files> <output_file>
 =====================================================================
-Written by:                   
-Xiaolong Wang @ Ocean University of China 
-email: xiaolong@ouc.edu.cn
+Written by: Xiaolong Wang 
+Bug reporting email to: ouqd@hotmail.com 
 website: http://www.DNAplusPro.com
 =====================================================================
 In hope useful in genomics and bioinformatics studies.
 This software is released under GNU/GPL license
-Copyright (c) 2015, Ocean University of China
+Copyright (c) 2018, Ocean Univ. of China & Arizona State Univ.
 =====================================================================
 
 */
@@ -23,18 +21,15 @@ import java.util.Arrays;
 //import java.util.*;
 //import java.lang.String.*;
 
-public class CombineProview{
+public class CombineProview2{
 
 	public static void main(String[] args){
 
 try{
 	
-	CombineProview FAobj=new CombineProview();
+	CombineProview2 FAobj=new CombineProview2();
 	String[] ProFiles= new String[150];
-	String[] Proview= new String[150]; 
 	String[] rec= new String[150];
-	
-	String Com_Pro="";
 	String DataDir=args[0];
 	int L0=args[0].length();
 	if (DataDir.substring(L0)=="/"){DataDir=DataDir.substring(0,L0-1);}
@@ -60,6 +55,7 @@ try{
 	System.out.println("Number of all files:"+FileList.length);
 	  
 	int Nf=0; //Number of proview files
+	
 	for (int i = 0; i < FileList.length; i++) {
 	   if (FileList[i].isFile()) {
 			AllFiles[i]=FileList[i].toString();
@@ -112,14 +108,17 @@ try{
 		System.out.println("Error: as show in the above, one or more of the proview files are invalid, program will now exit. The input in this directory must be .proview files produced from a single .mpileup file by using mapgd proview. Please move or remove the invalid file(s) and try again. ");
 		System.exit(0);
 	}		
+
 	
 	BufferedWriter out=new BufferedWriter(new FileWriter(output));
 
 	System.out.println(rec[1]+"<-- head");
 	out.write(rec[1]+"\n");			
 
-	//loop before the headline: copy the head 	
-	int i=0;
+	//loop before the headline: read and copy the head 	
+	String Combined_headline="";
+	String[] headlines=new String[150];
+	
 	while((rec[1]=br[1].readLine()) != null){
 		
 		//rec[1]=rec[1].trim();
@@ -138,7 +137,7 @@ try{
 		if(P1>=0&&P2>P1&&P3>P2)//is headline of the data
 		{
 			System.out.println(rec[1]+"<-- headline 1");
-			Com_Pro=rec[1].substring(0,P4-1);
+			Combined_headline=rec[1].substring(0,P4-1);
 			for(int j=1;j<=Nf;j++) //combine the headlines
 			{
 				if (rec[j]!= null) 
@@ -148,8 +147,8 @@ try{
 					int P6=rec[j].lastIndexOf(":");
 					if (P5==P6)   
 					{
-						Proview[j]=rec[j].substring(P4);
-						Com_Pro+=Proview[j];
+						headlines[j]=rec[j].substring(P4);
+						Combined_headline+=headlines[j];
 					} 
 					else
 					{
@@ -159,8 +158,8 @@ try{
 					}
 				}
 			}
-			System.out.println(Com_Pro+"<-- combined headline");
-			out.write(Com_Pro+"\n");
+			System.out.println(Combined_headline+"<-- combined headline");
+			out.write(Combined_headline+"\n");
 			break;
 		}
 		else
@@ -171,6 +170,10 @@ try{
 	}
 	
 	//loop after the headline: combine the data from each profile
+	
+	int i=0;
+	String[][] Proview= new String[150][200000000]; 
+	String[] ComPro=new String[200000000];
 	
 	while((rec[1]=br[1].readLine()) != null){
 		
@@ -189,34 +192,47 @@ try{
 			if(Q1>=0&&Q2>=10)//is data
 			{
 				i++;
-				Com_Pro=rec[1].substring(0,Q3-1);
+				ComPro[i]=rec[1].substring(0,Q3-1);
 				for(int j=1;j<=Nf;j++) //combine data for each line
 				{
 					if (rec[j]!= null) 
 					{
-						Proview[j]=rec[j].substring(Q3);
-						Com_Pro+=Proview[j];
+						Proview[j][i]=rec[j].substring(Q3);
+						ComPro[i]+=Proview[j][i];
 					}
 				}
-				//if (i%1000000==0){System.out.println(" "+i+" lines combined.");}
-				out.write(Com_Pro+"\n");
+				
+				if (i%1000000==0)
+				{
+					System.out.println(" "+i+" lines combined.");
+				}
 			}
 			else
 			{
-				System.out.println(rec[1]+"--> tail");
-				out.write(rec[1]+"\n");			
+				System.out.println(rec[1]+"<-- tail");
+				ComPro[i]=rec[1];			
 			}
 			
 	}
+	
 	System.out.println("  In total "+i+" lines combined.");
 	System.out.println("  Each line contains "+Nf+" colums (clones).");
 	out.close();
+	
+	//Write combined data to output file
+	
+	int NL=i; //Number if lines
+	
+	for (i=1;i<NL;i++)
+	{
+		out.write(ComPro[i]+"\n");			
+	}
 		
 	System.out.print("All mapgd proview files were combined and saved as:\n "+output);
 		 
 	}catch(Exception e){
 		System.out.println("\nThis program is to combine multiple mapgd  proview output files (SampleID-*.pro.txt) into one single file named SampleID.combined.pro.txt\n"); 
-		System.out.println("\nUsage: Java -cp ./ CombineProview </Path/To/proview_files> <SampleID>\n"); 
+		System.out.println("\nUsage: Java -cp ./ CombineProview2 </Path/To/proview_files> <SampleID>\n"); 
 		System.out.println(e);
 		e.printStackTrace();
 	}

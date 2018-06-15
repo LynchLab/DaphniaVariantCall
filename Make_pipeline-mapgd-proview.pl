@@ -9,7 +9,7 @@
 #$Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
 
 $SampleID="PA2013"; 
-$DATA_DIR="/N/dc2/scratch/xw63/$SampleID/Bwa";
+$DATA_DIR="/N/dc2/scratch/xw63/$SampleID/Bwa/mpileup";
 $HeaderFile="$DATA_DIR/PA42.header";
 $MaxNumberofSamples=125;
 $emailaddress='ouqd@hotmail.com';
@@ -19,10 +19,10 @@ $emailaddress='ouqd@hotmail.com';
 
 #Now we find the mpileup files and produce a batch file for them
 
-open OUT1, ">./mapgd_proview.pbs" or die "cannot open file: $!";
+open OUT1, ">./mapgd-parallel-proview.pbs" or die "cannot open file: $!";
 print OUT1 
 "#!/bin/bash 
-#PBS -N mapgd-proview
+#PBS -N mapgd-parallel-proview
 #PBS -k o
 #PBS -l nodes=1:ppn=16,walltime=6:00:00
 #PBS -l vmem=100gb
@@ -45,35 +45,48 @@ echo ===============================================================
 echo 0. Make a header file
 echo ===============================================================
 set -x
-samtools view -H $DATA_DIR/PA2013-001-RG_Sorted_dedup_realigned_Clipped.bam > $HeaderFile
+time samtools view -H PA2013-001-RG_Sorted_dedup_realigned_Clipped.bam > $HeaderFile
 set +x
 echo ===============================================================
 echo 1. Make a pro file of nucleotide-read quartets -counts of A, C, G, and T, from the mpileup files of the clones.
 echo ===============================================================
-set -x";
+set -x
+date";
 
 $n=0;
 $n1=0;
 while ($n<=$MaxNumberofSamples+1) {
 	$n=$n+1;
 	$nstr001= sprintf ("%03d", $n-1);
-	$OUTPUT="$DATA_DIR/$SampleID-$nstr001";
-	print "$nstr001:$OUTPUT.mpileup";
-if(-e "$OUTPUT.mpileup"){ 
-	print ", Okay, a mpileup file is found! lets make a mapgd pro file:$OUTPUT.proview\n"; 
-	$n1=$n1+1;	
-	print OUT1 "\nmapgd proview -i $OUTPUT.mpileup -H $HeaderFile > $OUTPUT.proview &\n";			
+	$OUTPUT="$SampleID-$nstr001";
+	
+	if(-e "$DATA_DIR/$OUTPUT.mpileup"){ 
+		$n1=$n1+1;	
+		#print ", Okay, a mpileup file is found! lets make a mapgd pro file:$OUTPUT.proview\n"; 
+		print "$n1: $OUTPUT.mpileup\n";
+		print OUT1 "\ntime mapgd proview -i $OUTPUT.mpileup -H $HeaderFile > $OUTPUT.proview &\n";			
+	}
+}
+print OUT1 
+"\nwait\n
+date
+
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
+";			
+if ($n1>0)
+{
+	print "\n$n1 mpileup files are found in $DATA_DIR.\n\n";
+	print "
+	============================================================
+	Type the following command to produce the mapgd proview files: 
+
+	  qsub ./mapgd-parallel-proview.pbs
+	============================================================\n\n\n";
 }
 else
- { 
-	print ", Ops, this file is not found! \n"; 
- } 
+{
+	print "No mpileup file is found in $DATA_DIR.\n\n\n";
 }
-print OUT1 "\nwait\n";			
 
-print "\n
-============================================================
-Type the following command to make the mapgd proview: 
-
-  qsub ./mapgd_proview.pbs
-============================================================\n\n";

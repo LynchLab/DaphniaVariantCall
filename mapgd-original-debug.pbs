@@ -123,5 +123,8 @@ set -x
 time mapgd relatedness -i $SampleID-wh_wf_200K_F.genotype -o $SampleID-200K_rel.out
 
 set +x
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
 
 

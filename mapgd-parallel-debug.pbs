@@ -45,10 +45,10 @@ echo In the original pipeline, this step is implemented by the following command
 echo 'mapgd proview -i *.mpileup -H $HeaderFile > $SampleID.pro.txt' 
 echo Because it is not fully parallelized, this is very slow. The computation will takes up to 50-100 hours for a population with 96 clones. To reduce the computation time, this step is implemented with the following commands instead:
 set -x
-time mapgd proview -i $SampleID-001.mpileup -H $HeaderFile > $SampleID-001.proview &
-time mapgd proview -i $SampleID-002.mpileup -H $HeaderFile > $SampleID-002.proview &
-time mapgd proview -i $SampleID-003.mpileup -H $HeaderFile > $SampleID-003.proview &
-wait
+echo 'time mapgd proview -i $SampleID-001.mpileup -H $HeaderFile > $SampleID-001.proview &'
+echo 'time mapgd proview -i $SampleID-002.mpileup -H $HeaderFile > $SampleID-002.proview &'
+echo 'time mapgd proview -i $SampleID-003.mpileup -H $HeaderFile > $SampleID-003.proview &'
+echo wait
 set +x
 echo In this way, mapgd proview is executed for each of the 96 clones.  Because all processes can be run simutaneously in independent threads, the computation time is greatly deduced:
 set +x
@@ -136,4 +136,7 @@ set -x
 time mapgd relatedness -i $DATA_DIR/$SampleID.combined_F_200K_wh_wf.genotype -o $DATA_DIR/$SampleID.combined_F_200K_wh_wf_rel.out
 
 set +x
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
 

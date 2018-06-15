@@ -1,5 +1,5 @@
 #!/bin/bash 
-#PBS -N mapgd-parallel-bwa
+#PBS -N mapgd-parallel-Bwa
 #PBS -k o
 #PBS -l nodes=1:ppn=16,walltime=96:00:00
 #PBS -l vmem=100gb
@@ -127,4 +127,7 @@ set -x
 time mapgd relatedness -i $DATA_DIR/$SampleID.combined_F_200K_wh_wf.genotype -o $DATA_DIR/$SampleID.combined_F_200K_wh_wf_rel.out
 
 set +x
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
 

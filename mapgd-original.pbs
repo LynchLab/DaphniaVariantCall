@@ -1,5 +1,5 @@
 #!/bin/bash 
-#PBS -N mapgd-PA2013-Bwa
+#PBS -N mapgd-origin-Bwa
 #PBS -k o
 #PBS -l nodes=1:ppn=16,walltime=200:00:00
 #PBS -l vmem=100gb
@@ -126,5 +126,8 @@ set -x
 time mapgd relatedness -i $SampleID-wh_wf_200K_F.genotype -o $SampleID-200K_rel.out
 
 set +x
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
 
 
