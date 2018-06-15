@@ -1,6 +1,6 @@
-	=============================================================
+	=================================================================
 	#	How to make and run the genome mapping/mapgd pipelines  #
-	=============================================================
+	=================================================================
 To make and run the genome mapping/mapgd pipelines, please read:
 README-1.genome mapping-Bwa.txt
 README-2.genome mapping-Hisat.txt
