@@ -9,7 +9,7 @@
 #$Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
 
 $SampleID="PA2013"; 
-$DATA_DIR="/N/dc2/scratch/xw63/$SampleID/Bwa/mpileup";
+$DATA_DIR="/N/dc2/scratch/xw63/$SampleID/Bwa";
 $HeaderFile="$DATA_DIR/PA42.header";
 $MaxNumberofSamples=125;
 $emailaddress='ouqd@hotmail.com';
@@ -64,7 +64,7 @@ while ($n<=$MaxNumberofSamples+1) {
 		$n1=$n1+1;	
 		#print ", Okay, a mpileup file is found! lets make a mapgd pro file:$OUTPUT.proview\n"; 
 		print "$n1: $OUTPUT.mpileup\n";
-		print OUT1 "\ntime mapgd proview -i $OUTPUT.mpileup -H $HeaderFile > $OUTPUT.proview &\n";			
+		print OUT1 "\ntime /N/dc2/projects/daphpops/Software/MAPGD-0.4.26/bin/mapgd proview -i $OUTPUT.mpileup -H $HeaderFile > $OUTPUT.proview &\n";			
 	}
 }
 print OUT1 
