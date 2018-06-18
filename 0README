@@ -1,8 +1,44 @@
-	=================================================================
+	=============================================================
 	#	How to make and run the genome mapping/mapgd pipelines  #
-	=================================================================
-To make and run the genome mapping/mapgd pipelines, please read:
+	=============================================================
+	
+To make and run the genome mapping/mapgd pipelines in large scale, simply run:
+
+ ./Make_pipelines.sh
+
+ You screen will show a menu:
+
+     ==============================================================
+     #                                                            #
+     #     To make genome mapping pipelines, execute the          #
+     # following commands, and follow the instructions they give: #
+     #                                                            #
+     #     To make genome mapping pipelines using bwa:            #
+     #                                                            #
+     #              perl Make_pipeline-bwa.pl                     #
+     #                                                            #
+     #     To make genome mapping pipelines using novalign:       #
+     #                                                            #
+     #             perl Make_pipeline-novalign.pl                 #
+     #                                                            #
+     #     To make genome mapping pipelines using hisat2:         #
+     #                                                            #
+     #              perl Make_pipeline-hisat.pl                   #
+     #                                                            #
+     ==============================================================
+
+	 Edit and Run the pipeline-making perl script for the aligner you choose to make the pipelines and then 
+
+Read the following Readme for a detailed description for each pipeline:
 README-1.genome mapping-Bwa.txt
 README-2.genome mapping-Hisat.txt
 README-3.genome mapping-Novoalign.txt
-README-4.mapgd parallel.txt
+
+In addition,in the original mapgd pipeline, the first step (mapgd proview) is very slow because it is not fully parallelized. This step  will takes up to 50-100 hours for a population with 96 clones. To reduce the computation time, this step is replaced with a modified pipeline, called mapgd-parallel-proview.pbs (produced by Make_pipeline-mapgd-proview.pl), in which the proview files are generated for each of the 96 clones. 	
+
+In this way, mapgd proview file is produced for each of the 96 clones.  Because all processes can be run simutaneously in independent threads, the computation time is greatly deduced. 
+
+Then, these mapgd proview files are combined by a homemade java program (CombineProview.java).
+
+Please refer to README-4.mapgd parallel.txt for details.
+
