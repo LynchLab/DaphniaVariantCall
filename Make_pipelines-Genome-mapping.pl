@@ -95,7 +95,7 @@ while ($n<=$MaxNumberofSamples+1) {
 	$Sample=$DATA_DIR."/".$SampleID."-".$nstr001;
 	$Sample_R1=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R1";
 	$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2";
-	$OUTPUT_DIR=$DATA_DIR."/$aln";
+	$OUTPUT_DIR=$DATA_DIR."/".ucfirst($aln);
 	$OUTPUT=$OUTPUT_DIR."/".$SampleID."-".$nstr001;
 if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){ 
 	#print ", Okay, this pair-end reads fastq file is found! lets make a pbs file:"; 
@@ -151,6 +151,7 @@ $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.0.sam I=$OUTPUT-pai
 
 	}
 open OUT, ">$pbsfile" or die "cannot open file: $!";
+my $localtime = localtime();  
 print OUT 
 "#!/bin/bash	
 #PBS -N $aln-$SampleID-$nstr001
@@ -163,6 +164,7 @@ print OUT
 
 # This pipeline pbs is produced by the perl script:
 # perl Make_pipelines-Genome-mapping.pl $ARGV[0] $ARGV[1] $ARGV[2]
+# Date and time: $localtime
 
 set +x
 module load samtools
