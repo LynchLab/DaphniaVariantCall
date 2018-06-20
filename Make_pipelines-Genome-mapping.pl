@@ -1,32 +1,4 @@
 #! /bin/usr/perl -w
-
-#alignment tool: bwa, hisat, or novoalign
-
-$aln=lc($ARGV[0]);
-if ($aln eq NULL)
-{
-	print "\n\nYou have not selected a alignment tool. 
-	The first input args is the alignment tool, 
-	it must be:  bwa, hisat, or novoalign.\n\n"; 
-	exit
-}
-print "\n\nyou have selected the alignment tool: $aln\n\n";
-
-if ($aln ne "bwa"&&$aln ne "hisat"&&$aln ne "novoalign")
-{
-	print "\n\nThe input args is invalid. 
-	The first input args is the alignment tool, 
-	it must be:  bwa, hisat, or novoalign.\n\n"; 
-	exit
-}
-#ref_genome index path and file
-$work_dir="/N/u/xw63/Carbonate/daphnia/genome_index";
-$ref_genome="PA42.4.1";
-
-# The adapter file: an example (Bioo_Adapters.fa) can be found in the  directory:
-#$Adapters="/PATH/TO/Adapters.fa";
-$Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
-
 #Save all your raw reads in the DATA_DIR in a sub dir named as SampleID/fastq/
 #Name you files like: 
 #SampleID-001-R1.fastq
@@ -37,11 +9,63 @@ $Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
 #SampleID-100-R1.fastq
 #SampleID-100-R2.fastq
 
-$SampleID="PA2013"; 
-$DATA_DIR="/N/dc2/scratch/xw63/".$SampleID;
+#alignment tool: bwa, hisat, or novoalign
+
+$aln=lc($ARGV[0]);
+
+if ($aln eq "")
+{
+	print "\n\nYou have not selected a alignment tool. 
+	The first input args is the alignment tool, 
+	it must be:  bwa, hisat, or novoalign.\n\n"; 
+	exit
+}
+print "\n\nYou have selected the alignment tool: $aln\n\n";
+
+if ($aln ne "bwa"&&$aln ne "hisat"&&$aln ne "novoalign")
+{
+	print "\nThe 1st input (args) is invalid. 
+	The 1st args is the alignment tool, 
+	it must be: bwa, hisat, or novoalign.\n\n"; 
+	exit
+}
+
+$DATA_DIR=$ARGV[1];
+
+if(!(-e (glob($DATA_DIR))[0]))
+{
+	print "\nThe 2nd input (args) is the data directory. The data directory is not found:
+				$DATA_DIR
+	
+	"; 
+	exit
+}
+
+print "\n The data directory is:
+				$DATA_DIR
+	"; 
+
+$SampleID=$ARGV[2]; 
+
+if ($SampleID eq "")
+{
+	print "\n\nPlease input a population/Sample ID (The 3rd args).\n\n"; 
+	exit
+}
+
 $tmp_DIR=$DATA_DIR."/tmp";
 $MaxNumberofSamples=125;
 $emailaddress='ouqd@hotmail.com';
+
+#ref_genome index path and file
+$work_dir="/N/u/xw63/Carbonate/daphnia/genome_index";
+$ref_genome="PA42.4.1";
+
+# The adapter file: an example (Bioo_Adapters.fa) can be found in the  directory:
+#$Adapters="/PATH/TO/Adapters.fa";
+$Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
+
+
 
 # The paths to the software used in this pipeline
 # You must first make sure you have all these software installed and they are all functional
@@ -84,7 +108,8 @@ if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){
 
 	if ($aln eq "bwa")
 	{	
-print "Alignment tool is bwa";
+#print "Alignment tool is bwa";
+
 $Aln_comand="	
 time $BWA mem -t 8 -M -k 30 $ref_genome.fasta $Sample_R1-paired.fq $Sample_R2-paired.fq > $OUTPUT-paired.sam &
 	
@@ -96,7 +121,7 @@ $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-un
 	}	
 	if ($aln eq "hisat")
 	{
-	print "Alignment tool is hisat";
+#	print "Alignment tool is hisat";
 $Aln_comand="
 time $hisat -x $ref_genome -1 $Sample_R1-paired.fq -2 $Sample_R2-paired.fq -S $OUTPUT-paired.sam &
 	
@@ -108,7 +133,7 @@ $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-un
 	}
 	if ($aln eq "novoalign")
 	{
-	print "Alignment tool is novoalign";
+#	print "Alignment tool is novoalign";
 	
 $Aln_comand="
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.0.fastq $Sample_R2-paired.0.fastq > $OUTPUT-paired.0.sam &
@@ -135,6 +160,10 @@ print OUT
 #PBS -M $emailaddress
 #PBS -m abe
 #PBS -j oe
+
+# This pipeline pbs is produced by the perl script:
+# perl Make_pipelines-Genome-mapping.pl $ARGV[0] $ARGV[1] $ARGV[2]
+
 set +x
 module load samtools
 module load java
@@ -285,30 +314,21 @@ if ($n1==0)
 	print "No R1/R2.fq read file is found in $DATA_DIR.\n\n\n";
 }
 else
-{print "\n
+{
+print "\n
 ============================================================
-$n1 pbs files are produced and saved in: $DATA_DIR/pbs/
+$n1 pbs files are produced and saved in: 
+	$DATA_DIR/pbs/
   $aln-$SampleID-000.pbs, 
   $aln-$SampleID-001.pbs,
   ... ... 
   $aln-$SampleID-$n.pbs
 ============================================================
-In these pbs files, $aln-$SampleID-000.pbs is useful for debuging this 
-pipeline, two small-sized pair-ended fastq read files, named as: 
-		$SampleID-000-R1.fq
-		$SampleID-000-R2.fq 
-should be prepared and copied to the data directory:
-		$DATA_DIR
-Then, type the following commands: 
-		qsub -q debug $DATA_DIR/pbs/$aln-$SampleID-000.pbs			
-The walltime of $aln-$SampleID-000.pbs is only 1.00 hour, 
-this will help to identify any problems quickly.
-============================================================
 To submit all of the pbs jobs, type the following commands: 
    chmod 755 ./qsub_all_pbs-$aln.sh 
    ./qsub_all_pbs-$aln.sh 
 ============================================================
-Before submitting these pbs files, reference genome index files  
+Before submitting these pbs files, reference genome index files
 must first be made by using the following commands: 
  \$ samtools faidx $ref_genome.fasta 
  \$ bwa index $ref_genome.fasta 
@@ -316,8 +336,22 @@ must first be made by using the following commands:
  \$ $novoindex $novoindex_ref_genome $ref_genome.fasta 
  \$ rm $ref_genome.dict 
  \$ java -jar /N/soft/rhel6/picard/2.8.1/picard.jar  CreateSequenceDictionary R=PA42.4.1.fasta O=PA42.4.1.dict
-
-PLEASE NOTE: DO NOT excute these commands repeatedly in the pbs jobs, as it will cause a problem when one job is using the index files while another job is re-creating the index.
+============================================================
+ PLEASE NOTE: DO NOT excute the indexing commands repeatedly in the jobs,
+ as it will cause a problem when one job is using the index files 
+ while another job is re-creating them.
+============================================================
+In these pbs files, $aln-$SampleID-000.pbs is useful for debuging these 
+pipelines. The walltime of these pipelines is $walltime hours, 
+while the walltime of $aln-$SampleID-000.pbs is only 1.00 hour, 
+this will help to identify any problems quickly.
+To debug, two small-sized pair-ended fastq read files, named as: 
+		$SampleID-000-R1.fq
+		$SampleID-000-R2.fq 
+should be prepared and saved in the data directory:
+		$DATA_DIR
+Then, type the following commands: 
+		qsub -q debug $DATA_DIR/pbs/$aln-$SampleID-000.pbs			
 ============================================================
 
 ";

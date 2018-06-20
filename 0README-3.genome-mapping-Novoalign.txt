@@ -41,10 +41,10 @@
 	Your email address: $emailaddress='ouqd@hotmail.com'
 	
 4. Make pipeline pbs files:
-	======================================
-		perl Make_pipeline-novoalign.pl  
-	======================================
-	
+	===================================================================
+		perl Make_pipelines-Genome-mapping.pl novoalign path SampleID
+	===================================================================
+		
 	pipeline .pbs files will be produced for each pair of reads, 
 	and the pbs files are saved in the current directory:
 	./SampleID-001.pbs

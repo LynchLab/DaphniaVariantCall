@@ -8,26 +8,26 @@ To make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
  You screen will show a menu:
 
-     ==============================================================
-     #                                                            #
-     #     To make genome mapping pipelines, execute the          #
-     # following commands, and follow the instructions they give: #
-     #                                                            #
-     #     To make genome mapping pipelines using bwa:            #
-     #                                                            #
-     #              perl Make_pipeline-bwa.pl                     #
-     #                                                            #
-     #     To make genome mapping pipelines using novalign:       #
-     #                                                            #
-     #             perl Make_pipeline-novalign.pl                 #
-     #                                                            #
-     #     To make genome mapping pipelines using hisat2:         #
-     #                                                            #
-     #              perl Make_pipeline-hisat.pl                   #
-     #                                                            #
-     ==============================================================
+  =================================================================
+  #                                                               #
+  #     To make genome mapping pipelines, execute the             #
+  # following commands, and follow the instructions they give:    #
+  #                                                               #
+  #     To make genome mapping pipelines using bwa:               #
+  #                                                               #
+         perl Make_pipelines-Genome-mapping.pl bwa path sampleID
+  #                                                               #
+  #     To make genome mapping pipelines using novalign:          #
+  #                                                               #
+      perl Make_pipelines-Genome-mapping.pl novalign path sampleID
+  #                                                               #
+  #     To make genome mapping pipelines using hisat2:            #
+  #                                                               #
+       perl Make_pipelines-Genome-mapping.pl hisat path sampleID
+  #                                                               #
+  =================================================================
 
-	 Edit and Run the pipeline-making perl script for the aligner you choose to make the pipelines and then 
+Run the Make_pipelines-Genome-mapping perl script for the aligner you choose to make the pipelines and then 
 
 Read the following Readme for a detailed description for each pipeline:
 README-1.genome mapping-Bwa.txt
