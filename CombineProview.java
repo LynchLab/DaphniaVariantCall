@@ -138,7 +138,7 @@ try{
 		if(P1>=0&&P2>P1&&P3>P2)//is headline of the data
 		{
 			System.out.println(rec[1]+"<-- headline 1");
-			Com_Pro=rec[1].substring(0,P4-1);
+			Com_Pro=rec[1].substring(0,P4);
 			for(int j=1;j<=Nf;j++) //combine the headlines
 			{
 				if (rec[j]!= null) 
@@ -173,7 +173,11 @@ try{
 	//loop after the headline: combine the data from each profile
 	
 	while((rec[1]=br[1].readLine()) != null){
-		
+
+		if (rec[1]== null) 
+		{
+			break;
+		}
 		//rec[1]=rec[1].trim();
 		
 		for(int j=2;j<=Nf;j++)
@@ -189,7 +193,7 @@ try{
 			if(Q1>=0&&Q2>=10)//is data
 			{
 				i++;
-				Com_Pro=rec[1].substring(0,Q3-1);
+				Com_Pro=rec[1].substring(0,Q3);
 				for(int j=1;j<=Nf;j++) //combine data for each line
 				{
 					if (rec[j]!= null) 
