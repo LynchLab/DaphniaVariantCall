@@ -6,7 +6,7 @@ To make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
  ./Make_pipelines.sh
 
- You screen will show a menu:
+ Your screen will show a menu:
 
   =================================================================
   #                                                               #
