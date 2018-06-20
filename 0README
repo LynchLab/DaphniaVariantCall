@@ -29,10 +29,11 @@ To make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
 Run the Make_pipelines-Genome-mapping perl script for the aligner you choose to make the pipelines and then 
 
-Read the following Readme for a detailed description for each pipeline:
-README-1.genome mapping-Bwa.txt
-README-2.genome mapping-Hisat.txt
-README-3.genome mapping-Novoalign.txt
+For a detailed description for each pipeline, read the following Readme:
+
+0README-1.genome mapping-Bwa.txt
+0README-2.genome mapping-Hisat.txt
+0README-3.genome mapping-Novoalign.txt
 
 In addition,in the original mapgd pipeline, the first step (mapgd proview) is very slow because it is not fully parallelized. This step  will takes up to 50-100 hours for a population with 96 clones. To reduce the computation time, this step is replaced with a modified pipeline, called mapgd-parallel-proview.pbs (produced by Make_pipeline-mapgd-proview.pl), in which the proview files are generated for each of the 96 clones. 	
 
@@ -40,5 +41,6 @@ In this way, mapgd proview file is produced for each of the 96 clones.  Because 
 
 Then, these mapgd proview files are combined by a homemade java program (CombineProview.java).
 
-Please refer to README-4.mapgd parallel.txt for details.
+for details on the parallel mapgd pipeline, please refer to: 
+0README-4.mapgd parallel.txt .
 
