@@ -146,6 +146,7 @@ To submit the produced pipeline pbs jobs to the system for computing:
 	======================================
 	
 	chmod 755 qsub_all_pbs-bwa.sh
+	
 	./qsub_all_pbs-bwa.sh
 		
 	======================================
@@ -155,6 +156,7 @@ To submit the produced pipeline pbs jobs to the system for computing:
 	======================================
 	
 	chmod 755 qsub_all_pbs-hisat.sh
+	
 	./qsub_all_pbs-hisat.sh
 		
 	======================================
@@ -164,10 +166,11 @@ To submit the produced pipeline pbs jobs to the system for computing:
 	======================================
 	
 	chmod 755 qsub_all_pbs-novoalign.sh
+	
 	./qsub_all_pbs-novoalign.sh
 		
 	======================================
 
-Then wait for the results.
+Then wait for the results and outputs.
 
 ========================End======================
