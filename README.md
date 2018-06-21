@@ -65,8 +65,8 @@ This program is useful for genome mapping in large scale. If you have a large nu
 
   =================================================================
                                                                  
-       To make genome mapping pipelines, execute the             
-   following commands, and follow the instructions they give:    
+       To make genome mapping pipelines, execute the 
+       following commands, and follow the instructions they give:    
                                                                  
        To use bwa:              				  
                                                                  
@@ -81,9 +81,11 @@ This program is useful for genome mapping in large scale. If you have a large nu
 			perl MGMP.pl hisat <DATA_DIR> <sampleID>
                                                                  
   =================================================================
+  
 Please copy and execute one of the above commands with appropriate args.
 	
-A series of pipeline .pbs files will be produced for each pair of reads, and the pbs files are saved in the data directory in a sub directory, DATA_DIR/pbs/:
+A series of pipeline .pbs files will be produced for each pair of reads, 
+and the pbs files are saved in the data directory in a sub directory, DATA_DIR/pbs/:
 
 For bwa:
 
@@ -145,4 +147,4 @@ To submit the produced pipeline pbs jobs to the system for computing:
 		./qsub_all_pbs-novoalign.sh
 	======================================
 
-==========End=======
+========================End======================
