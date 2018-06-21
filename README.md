@@ -8,7 +8,14 @@
 		   How to make and run the genome mapping pipelines  
 		======================================================
 
-This program is useful for genome mapping in large scale. If you have a large number (up to hundreds) of NGS sequencing reads to map onto a reference genome, following these steps for mapping the reads:
+This program is useful for genome mapping in large scale. Features:
+(1) To make it as simple as possible, I have integrated the three alignment tools (bwa, hisat, and novoalign) into one single Perl script. One can select an alignment tool, the data directory and the population ID simply by using a command line with three args.
+		perl MGMP.pl bwa path sampleID
+		perl MGMP.pl novoalign path sampleID
+		perl MGMP.pl hisat path sampleID
+(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier for debugging where and why the problem(s) produced in the process.
+
+If you have a large number (up to hundreds) of NGS sequencing reads to map onto a reference genome, following these steps for mapping the reads:
 1.Save all Your raw reads in DATA_DIR in a sub dir ./fastq/, name you files in this way: 
 
 	SampleID-001-R1.fastq
@@ -129,22 +136,30 @@ To submit the produced pipeline pbs jobs to the system for computing:
 	For bwa:
 
 	======================================
-		chmod 755 qsub_all_pbs-bwa.sh
-		./qsub_all_pbs-bwa.sh
+	
+	chmod 755 qsub_all_pbs-bwa.sh
+	./qsub_all_pbs-bwa.sh
+		
 	======================================
 
 	For hisat:
 	
 	======================================
-		chmod 755 qsub_all_pbs-hisat.sh
-		./qsub_all_pbs-hisat.sh
+	
+	chmod 755 qsub_all_pbs-hisat.sh
+	./qsub_all_pbs-hisat.sh
+		
 	======================================
 
 	For novoalign:
 
 	======================================
-		chmod 755 qsub_all_pbs-novoalign.sh
-		./qsub_all_pbs-novoalign.sh
+	
+	chmod 755 qsub_all_pbs-novoalign.sh
+	./qsub_all_pbs-novoalign.sh
+		
 	======================================
+
+Then wait for the results.
 
 ========================End======================
