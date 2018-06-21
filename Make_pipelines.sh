@@ -18,6 +18,6 @@ echo '  #                                                               #'
 echo '       		perl MGMP.pl hisat path sampleID   '
 echo '  #                                                               #'
 echo '  ================================================================='
-echo 			Please copy and execute one of the above commands.
+echo  Please copy and execute one of the above commands with appropriate args.
 echo 
 
