@@ -1,6 +1,6 @@
 echo
 echo
-echo '     =============================================================='
+echo '  ================================================================='
 echo '  #                                                               #'
 echo '  #     To make genome mapping pipelines, execute the             #'
 echo '  # following commands, and follow the instructions they give:    #'
@@ -17,7 +17,7 @@ echo '  #     To make genome mapping pipelines using hisat2:            #'
 echo '  #                                                               #'
 echo '       perl Make_pipelines-Genome-mapping.pl hisat path sampleID   '
 echo '  #                                                               #'
-echo '     =============================================================='
+echo '  ================================================================='
 echo
-echo
+echo 
 
