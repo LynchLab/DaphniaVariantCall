@@ -32,13 +32,17 @@
 
 4. Edit MGMP.pl, change the settings according to your data:
 
-	Your reference genome: 
+	#Your reference genome: 
 		$ref_genome="PA42.4.1"
-	Your adapter sequence file name: 
-		$Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
-	Your maximum number of file numbering: 
+		
+	#Your adapter sequence file name: 
+		$Adapters="/PATH/To/Your/Adapters.fa";
+		
+	#Your maximum number of file numbering: 
 		$MaxNumberofSamples=150;
-	Your email address: $emailaddress='ouqd@hotmail.com'
+	
+	#Your email address: 
+		$emailaddress='xxx@xxx.xxx'
 	
 4. Make pipeline pbs files:
 
@@ -65,19 +69,20 @@ To make and run the genome mapping/mapgd pipelines in large scale, simply run:
   #     To make genome mapping pipelines, execute the             #
   # following commands, and follow the instructions they give:    #
   #                                                               #
-  #     To make genome mapping pipelines using bwa:               #
+  #     To use bwa:              				  #
   #                                                               #
-				perl MGMP.pl bwa path sampleID
+			perl MGMP.pl bwa path sampleID
   #                                                               #
-  #     To make genome mapping pipelines using novalign:          #
+  #     To use novalign:          				  #
   #                                                               #
-				perl MGMP.pl novalign path sampleID
+			perl MGMP.pl novalign path sampleID
   #                                                               #
-  #     To make genome mapping pipelines using hisat2:            #
+  #     To use hisat2:            				  #
   #                                                               #
-				perl MGMP.pl hisat path sampleID
+			perl MGMP.pl hisat path sampleID
   #                                                               #
   =================================================================
+Please copy and execute one of the above commands with appropriate args.
 
 Run the  perl script MGMP.pl with appropriate args for the aligner you choose to make the pipelines and then, 
 
