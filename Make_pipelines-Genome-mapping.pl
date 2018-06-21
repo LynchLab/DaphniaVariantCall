@@ -88,10 +88,12 @@ open OUT1, ">./qsub_all_pbs-$aln.sh" or die "cannot open file: $!";
 
 $n=0;
 $n1=0;
+$ppn=16;
+
 while ($n<=$MaxNumberofSamples+1) {
 	$n=$n+1;
 	$nstr001= sprintf ("%03d", $n-1);
-	$walltime=($n==1?"01":"12");
+	$walltime=(($n==1)?"01":(($aln eq "novoalign")?"48":"24"));
 	$Sample=$DATA_DIR."/".$SampleID."-".$nstr001;
 	$Sample_R1=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R1";
 	$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2";
@@ -111,11 +113,11 @@ if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){
 #print "Alignment tool is bwa";
 
 $Aln_comand="	
-time $BWA mem -t 8 -M -k 30 $ref_genome.fasta $Sample_R1-paired.fq $Sample_R2-paired.fq > $OUTPUT-paired.sam &
+time $BWA mem -t $ppn -M -k 30 $ref_genome.fasta $Sample_R1-paired.fq $Sample_R2-paired.fq > $OUTPUT-paired.sam &
 	
-time $BWA mem -t 8 -M -k 30 $ref_genome.fasta $Sample_R1-unpaired.fq > $OUTPUT-R1-unpaired.sam & 
+time $BWA mem -t $ppn -M -k 30 $ref_genome.fasta $Sample_R1-unpaired.fq > $OUTPUT-R1-unpaired.sam & 
 	
-time $BWA mem -t 8 -M -k 30 $ref_genome.fasta $Sample_R2-unpaired.fq > $OUTPUT-R2-unpaired.sam &";
+time $BWA mem -t $ppn -M -k 30 $ref_genome.fasta $Sample_R2-unpaired.fq > $OUTPUT-R2-unpaired.sam &";
 $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-unpaired.sam I=$OUTPUT-R2-unpaired.sam O=$OUTPUT.sam"
 
 	}	
@@ -123,11 +125,11 @@ $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-un
 	{
 #	print "Alignment tool is hisat";
 $Aln_comand="
-time $hisat -x $ref_genome -1 $Sample_R1-paired.fq -2 $Sample_R2-paired.fq -S $OUTPUT-paired.sam &
+time $hisat --no-spliced-alignment -p $ppn -q -x $ref_genome -1 $Sample_R1-paired.fq -2 $Sample_R2-paired.fq -S $OUTPUT-paired.sam &
 	
-time $hisat -x $ref_genome -U $Sample_R1-unpaired.fq -S $OUTPUT-R1-unpaired.sam &
+time $hisat --no-spliced-alignment -p $ppn -q -x $ref_genome -U $Sample_R1-unpaired.fq -S $OUTPUT-R1-unpaired.sam &
 	
-time $hisat -x $ref_genome -U $Sample_R2-unpaired.fq -S $OUTPUT-R2-unpaired.sam &
+time $hisat --no-spliced-alignment -p $ppn -q -x $ref_genome -U $Sample_R2-unpaired.fq -S $OUTPUT-R2-unpaired.sam &
 ";
 $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-unpaired.sam I=$OUTPUT-R2-unpaired.sam O=$OUTPUT.sam"
 	}
@@ -155,7 +157,7 @@ my $localtime = localtime();
 print OUT 
 "#!/bin/bash	
 #PBS -N $aln-$SampleID-$nstr001
-#PBS -l nodes=1:ppn=8
+#PBS -l nodes=1:ppn=$ppn
 #PBS -l vmem=100gb
 #PBS -l walltime=$walltime:00:00
 #PBS -M $emailaddress
