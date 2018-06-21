@@ -55,8 +55,12 @@ This program is useful for genome mapping in large scale. If you have a large nu
 	
 4.Make pipeline pbs files, to make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
- ./Make_pipelines.sh
-
+	=================================================================
+  
+ 			./Make_pipelines.sh
+			
+	=================================================================
+  
  Your screen will show a menu:
 
   =================================================================
@@ -79,7 +83,7 @@ This program is useful for genome mapping in large scale. If you have a large nu
   =================================================================
 Please copy and execute one of the above commands with appropriate args.
 	
-pipeline .pbs files will be produced for each pair of reads, and the pbs files are saved in the data directory in a sub directory pbs:
+A series of pipeline .pbs files will be produced for each pair of reads, and the pbs files are saved in the data directory in a sub directory, DATA_DIR/pbs/:
 
 For bwa:
 
