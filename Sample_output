@@ -1,0 +1,493 @@
+samtools version 1.5 loaded.
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
+unlimited
++ cd /N/u/xw63/Carbonate/daphnia/genome_index
++ mkdir /N/dc2/scratch/xw63/PA2013/Hisat
+mkdir: cannot create directory '/N/dc2/scratch/xw63/PA2013/Hisat': File exists
++ mkdir /N/dc2/scratch/xw63/PA2013/tmp
+mkdir: cannot create directory '/N/dc2/scratch/xw63/PA2013/tmp': File exists
++ set +x
+===============================================================
+0. making index files, which should be done before submitting pbs
+===============================================================
+samtools faidx PA42.4.1.fasta
+bwa index PA42.4.1.fasta
+hisat2-build PA42.4.1.fasta PA42.4.1
+/N/soft/rhel6/novoalign/novocraft/novoindex PA42.4.1.ndx PA42.4.1.fasta
+rm PA42.4.1.dict
+java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar CreateSequenceDictionary R=PA42.4.1.fasta O=PA42.4.1.dict
+These commands should be executed before submitting this pbs.
+DO NOT excute these commands repeatedly in the pbs jobs, as it will cause problems when one job is using the index while another job is re-creating the index.
+===============================================================
+1. After preparing the FASTA file of adapter sequences, trim adapter sequences from sequence reads.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/u/xw63/Carbonate/Trimmomatic-0.36/trimmomatic-0.36.jar PE /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1.fastq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2.fastq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-paired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-unpaired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-paired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-unpaired.fq HEADCROP:3 ILLUMINACLIP:/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa:2:30:10:2 SLIDINGWINDOW:4:15 MINLEN:30
+TrimmomaticPE: Started with arguments:
+ /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1.fastq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2.fastq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-paired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-unpaired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-paired.fq /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-unpaired.fq HEADCROP:3 ILLUMINACLIP:/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa:2:30:10:2 SLIDINGWINDOW:4:15 MINLEN:30
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTCTTCACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGACAGTGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGGCTCAGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTCCATTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAAGGAGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTCGCTATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTTAGCCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGCGTGAAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCCTGTTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTGGAGGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGGTGCGAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATACTTGATGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCGAGCGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAACGTGATATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGACCTTAGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGATCAGCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCTCTATCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAGATCTGATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATAGCGACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTGCGTACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTACCACCAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACGTATCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCATCAAGTATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTACGCAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTCGCACCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCGAAGTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGATAGACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCTGCTGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTACTAGTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCATTGAGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATTGGCTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTTCTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATTGAGGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAATCTGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTGAAGAGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCTAATCCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCTGAGCCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACGCTCGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGTCACTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTGTCCTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATCTTGTACTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGCAGGAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCTGTAGCCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAGTCTTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTGGTTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTCTATCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAATCCGTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGCGATCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGACTAGTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAGCTTGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCCAATGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCCAGTCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGAAGCCAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACCTCCAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGAGCCAATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGGAATGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTGTTCCAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTGGAACAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCAATCCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAACTCACCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACCACTGTATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCATACCAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTATGCCAGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAACGCTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACAGCAGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCCAAGACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTAAGGTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGCCATGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGAACTGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGCATACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGGCTAACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACATTGGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAGCTGAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACACGACCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGTACAAGATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCTCCTGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCTGGCATAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAAGACGGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGCTGATCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCTAACGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACAGATTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAATGGAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCGAAGTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAAGGACACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGCCTAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACTATGCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTCCGTCTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGACCACTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGGATTAGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAAGAGATCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGAATCTGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTCTTGGCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTGAAGAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAGTGACTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGATGTACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTACTCGCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCAGGAGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGGATTGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTTCACGCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGATGAATCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCCGTCTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTATCAGCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAGCGTTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAAGCGTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCGTTAGCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAAGTTCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTAGGCATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTACAGGATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGCACCTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCGAGTAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAATGTTGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGGTCGTGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAGACGGAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCCTCAATGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTATGTGGCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCGTGAGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGATAGAGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTACCTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAACAGGCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCTCACGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCTAACTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATACAGTGGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATCGATGTTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCTCTTCAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACAAGCTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTCCTGCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGGCTACAGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAAACATCGATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCTCGGTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTACATCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCTGTCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGATCGCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGACACACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATCATTCCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGAGTCAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTGGCTTCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCATCCTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTTGTCGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGACTGGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAGTGGTCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCTCCTTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGATTCATCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTAGAACACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTGGTATGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCGAACTTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGCTGATAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTACTTCGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTCTGTGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTATGCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACACACAGAAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGGAGAACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCTCGGTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGCATAGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCACTGTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAAGGTACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATATCACGTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAAGACTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGTGTGTCGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGGTTGTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGTTCTCCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTACCGAGCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAACCGAGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCAACCACAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCAGTTCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCACCTTACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGATACGTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTGACAGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGGTGAGTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATCAGATCTGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGAGGTGCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGAGGATGGGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCATGGCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGATCTCTTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTGGTGGTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATCCTGTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCCGACAACATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCAGATTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCTACGACGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTCATCCTAGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGACGGATTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTCAGCTCGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCACTTCGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATTTGACTCTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAACAACCAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCTAAGGTCATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACAACGCTTAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'CAAGCAGAAGACGGCATACGAGATGCAACATTGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCCACATAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTAGGATGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACCTCAATGAATCTCGTATGCCGTCTTCTGCTTG'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAGTTAGCATCTCGTATGCCGTCTTCTGCTTG'
+ILLUMINACLIP: Using 0 prefix pairs, 194 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Quality encoding detected as phred33
+Input Read Pairs: 618485 Both Surviving: 592284 (95.76%) Forward Only Surviving: 22093 (3.57%) Reverse Only Surviving: 2441 (0.39%) Dropped: 1667 (0.27%)
+TrimmomaticPE: Completed successfully
+
+real	11m44.808s
+user	11m36.270s
+sys	0m5.437s
++ set +x
+===============================================================
+3. Mapping reads to the reference sequence and output bam file.
+===============================================================
++ /N/soft/rhel7/hisat2/2.1.0/hisat2 --no-spliced-alignment -p 16 -q -x PA42.4.1 -1 /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-paired.fq -2 /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-paired.fq -S /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-paired.sam
++ /N/soft/rhel7/hisat2/2.1.0/hisat2 --no-spliced-alignment -p 16 -q -x PA42.4.1 -U /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R1-unpaired.fq -S /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R1-unpaired.sam
++ wait
++ /N/soft/rhel7/hisat2/2.1.0/hisat2 --no-spliced-alignment -p 16 -q -x PA42.4.1 -U /N/dc2/scratch/xw63/PA2013/fastq/PA2013-000-R2-unpaired.fq -S /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R2-unpaired.sam
+2441 reads; of these:
+  2441 (100.00%) were unpaired; of these:
+    1497 (61.33%) aligned 0 times
+    690 (28.27%) aligned exactly 1 time
+    254 (10.41%) aligned >1 times
+38.67% overall alignment rate
+
+real	0m3.844s
+user	0m0.508s
+sys	0m0.587s
+22093 reads; of these:
+  22093 (100.00%) were unpaired; of these:
+    13036 (59.01%) aligned 0 times
+    6867 (31.08%) aligned exactly 1 time
+    2190 (9.91%) aligned >1 times
+40.99% overall alignment rate
+
+real	0m4.017s
+user	0m1.832s
+sys	0m0.793s
+592284 reads; of these:
+  592284 (100.00%) were paired; of these:
+    420889 (71.06%) aligned concordantly 0 times
+    146801 (24.79%) aligned concordantly exactly 1 time
+    24594 (4.15%) aligned concordantly >1 times
+    ----
+    420889 pairs aligned concordantly 0 times; of these:
+      13287 (3.16%) aligned discordantly 1 time
+    ----
+    407602 pairs aligned 0 times concordantly or discordantly; of these:
+      815204 mates make up the pairs; of these:
+        660384 (81.01%) aligned 0 times
+        99383 (12.19%) aligned exactly 1 time
+        55437 (6.80%) aligned >1 times
+44.25% overall alignment rate
+
+real	0m10.375s
+user	1m23.531s
+sys	0m13.716s
++ set +x
+===============================================================
+4. Combine the SAM files using Picard.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar MergeSamFiles I=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-paired.sam I=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R1-unpaired.sam I=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R2-unpaired.sam O=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.sam
+[Wed Jun 20 17:45:43 EDT 2018] picard.sam.MergeSamFiles INPUT=[/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-paired.sam, /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R1-unpaired.sam, /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-R2-unpaired.sam] OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.sam    SORT_ORDER=coordinate ASSUME_SORTED=false MERGE_SEQUENCE_DICTIONARIES=false USE_THREADING=false VERBOSITY=INFO QUIET=false VALIDATION_STRINGENCY=STRICT COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Wed Jun 20 17:45:43 EDT 2018] Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11; Picard version: 2.8.1-SNAPSHOT
+INFO	2018-06-20 17:45:43	MergeSamFiles	Sorting input files using temp directory [/tmp/xw63]
+INFO	2018-06-20 17:45:51	MergeSamFiles	Processed     1,000,000 records.  Elapsed time: 00:00:07s.  Time for last 1,000,000:    7s.  Last read position: scaffold_10:999,313
+INFO	2018-06-20 17:45:55	MergeSamFiles	Finished reading inputs.
+[Wed Jun 20 17:46:04 EDT 2018] picard.sam.MergeSamFiles done. Elapsed time: 0.34 minutes.
+Runtime.totalMemory()=32928432128
+
+real	0m21.625s
+user	0m32.329s
+sys	0m3.256s
++ set +x
+===============================================================
+5. Convert the SAM file to the BAM file.
+===============================================================
++ /N/soft/rhel6/samtools/1.3.1/bin/samtools view -bS /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.sam
+
+real	0m22.405s
+user	0m21.762s
+sys	0m0.456s
++ set +x
+===============================================================
+6. Sort the BAM file using Picard.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar SortSam INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.bam OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-Sorted.bam SORT_ORDER=coordinate
+[Wed Jun 20 17:46:26 EDT 2018] picard.sam.SortSam INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.bam OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-Sorted.bam SORT_ORDER=coordinate    VERBOSITY=INFO QUIET=false VALIDATION_STRINGENCY=STRICT COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Wed Jun 20 17:46:26 EDT 2018] Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11; Picard version: 2.8.1-SNAPSHOT
+INFO	2018-06-20 17:46:33	SortSam	Finished reading inputs, merging and writing to output now.
+[Wed Jun 20 17:46:50 EDT 2018] picard.sam.SortSam done. Elapsed time: 0.39 minutes.
+Runtime.totalMemory()=32928432128
+
+real	0m24.057s
+user	0m29.676s
+sys	0m1.445s
++ set +x
+===============================================================
+7. Add read groups to the sorted BAM file.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar AddOrReplaceReadGroups INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-Sorted.bam OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted.bam RGID=Daphnia RGLB=bar RGPL=illumina RGSM=/N/dc2/scratch/xw63/PA2013/PA2013-000 RGPU=6
+[Wed Jun 20 17:46:51 EDT 2018] picard.sam.AddOrReplaceReadGroups INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-Sorted.bam OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted.bam RGID=Daphnia RGLB=bar RGPL=illumina RGPU=6 RGSM=/N/dc2/scratch/xw63/PA2013/PA2013-000    VERBOSITY=INFO QUIET=false VALIDATION_STRINGENCY=STRICT COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Wed Jun 20 17:46:51 EDT 2018] Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11; Picard version: 2.8.1-SNAPSHOT
+INFO	2018-06-20 17:46:51	AddOrReplaceReadGroups	Created read group ID=Daphnia PL=illumina LB=bar SM=/N/dc2/scratch/xw63/PA2013/PA2013-000
+
+INFO	2018-06-20 17:47:07	AddOrReplaceReadGroups	Processed     1,000,000 records.  Elapsed time: 00:00:16s.  Time for last 1,000,000:   16s.  Last read position: */*
+[Wed Jun 20 17:47:12 EDT 2018] picard.sam.AddOrReplaceReadGroups done. Elapsed time: 0.36 minutes.
+Runtime.totalMemory()=32928432128
+
+real	0m22.305s
+user	0m29.271s
+sys	0m1.032s
++ set +x
+===============================================================
+8. Mark duplicate reads.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar MarkDuplicates MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=100 MAX_RECORDS_IN_RAM=5000000 VALIDATION_STRINGENCY=LENIENT REMOVE_DUPLICATES=true INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted.bam OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam METRICS_FILE=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-metrics.txt
+[Wed Jun 20 17:47:13 EDT 2018] picard.sam.markduplicates.MarkDuplicates MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=100 INPUT=[/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted.bam] OUTPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam METRICS_FILE=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-metrics.txt REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=5000000    MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP=50000 SORTING_COLLECTION_SIZE_RATIO=0.25 REMOVE_SEQUENCING_DUPLICATES=false TAGGING_POLICY=DontTag ASSUME_SORTED=false DUPLICATE_SCORING_STRATEGY=SUM_OF_BASE_QUALITIES PROGRAM_RECORD_ID=MarkDuplicates PROGRAM_GROUP_NAME=MarkDuplicates READ_NAME_REGEX=<optimized capture of last three ':' separated fields as numeric values> OPTICAL_DUPLICATE_PIXEL_DISTANCE=100 VERBOSITY=INFO QUIET=false COMPRESSION_LEVEL=5 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Wed Jun 20 17:47:13 EDT 2018] Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11; Picard version: 2.8.1-SNAPSHOT
+INFO	2018-06-20 17:47:13	MarkDuplicates	Start of doWork freeMemory: 32751034584; totalMemory: 32928432128; maxMemory: 32928432128
+INFO	2018-06-20 17:47:13	MarkDuplicates	Reading input file and constructing read end information.
+INFO	2018-06-20 17:47:13	MarkDuplicates	Will retain up to 126647815 data points before spilling to disk.
+INFO	2018-06-20 17:47:18	MarkDuplicates	Read 839653 records. 0 pairs never matched.
+INFO	2018-06-20 17:47:20	MarkDuplicates	After buildSortedReadEndLists freeMemory: 30682257824; totalMemory: 32928432128; maxMemory: 32928432128
+INFO	2018-06-20 17:47:20	MarkDuplicates	Will retain up to 1029013504 duplicate indices before spilling to disk.
+INFO	2018-06-20 17:47:21	MarkDuplicates	Traversing read pair information and detecting duplicates.
+INFO	2018-06-20 17:47:21	MarkDuplicates	Traversing fragment information and detecting duplicates.
+INFO	2018-06-20 17:47:21	MarkDuplicates	Sorting list of duplicate records.
+INFO	2018-06-20 17:47:25	MarkDuplicates	After generateDuplicateIndexes freeMemory: 24534151832; totalMemory: 32928432128; maxMemory: 32928432128
+INFO	2018-06-20 17:47:25	MarkDuplicates	Marking 23604 records as duplicates.
+INFO	2018-06-20 17:47:25	MarkDuplicates	Found 0 optical duplicate clusters.
+INFO	2018-06-20 17:47:25	MarkDuplicates	Reads are assumed to be ordered by: coordinate
+INFO	2018-06-20 17:47:45	MarkDuplicates	Before output close freeMemory: 32765250664; totalMemory: 32928432128; maxMemory: 32928432128
+INFO	2018-06-20 17:47:45	MarkDuplicates	After output close freeMemory: 32765322432; totalMemory: 32928432128; maxMemory: 32928432128
+[Wed Jun 20 17:47:45 EDT 2018] picard.sam.markduplicates.MarkDuplicates done. Elapsed time: 0.53 minutes.
+Runtime.totalMemory()=32928432128
+
+real	0m32.461s
+user	0m51.973s
+sys	0m5.735s
++ set +x
+===============================================================
+9. Index the BAM file using Picard.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/picard/2.8.1/picard.jar BuildBamIndex INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam
+[Wed Jun 20 17:47:45 EDT 2018] picard.sam.BuildBamIndex INPUT=/N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam    VERBOSITY=INFO QUIET=false VALIDATION_STRINGENCY=STRICT COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Wed Jun 20 17:47:45 EDT 2018] Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11; Picard version: 2.8.1-SNAPSHOT
+WARNING: BAM index file /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bai is older than BAM /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam
+INFO	2018-06-20 17:47:49	BuildBamIndex	Successfully wrote bam index file /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bai
+[Wed Jun 20 17:47:49 EDT 2018] picard.sam.BuildBamIndex done. Elapsed time: 0.06 minutes.
+Runtime.totalMemory()=32928432128
+
+real	0m4.020s
+user	0m9.393s
+sys	0m0.954s
++ set +x
+===============================================================
+10. Define intervals to target for the local realignment.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/gatk/3.4-0/GenomeAnalysisTK.jar -T RealignerTargetCreator -R PA42.4.1.fasta -I /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam -o /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.intervals
+INFO  17:47:53,031 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:47:53,033 HelpFormatter - The Genome Analysis Toolkit (GATK) v3.4-0-g7e26428, Compiled 2015/05/15 03:25:41 
+INFO  17:47:53,033 HelpFormatter - Copyright (c) 2010 The Broad Institute 
+INFO  17:47:53,034 HelpFormatter - For support and documentation go to http://www.broadinstitute.org/gatk 
+INFO  17:47:53,038 HelpFormatter - Program Args: -T RealignerTargetCreator -R PA42.4.1.fasta -I /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam -o /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.intervals 
+INFO  17:47:53,043 HelpFormatter - Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11. 
+INFO  17:47:53,043 HelpFormatter - Date/Time: 2018/06/20 17:47:53 
+INFO  17:47:53,043 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:47:53,043 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:47:53,605 GenomeAnalysisEngine - Strictness is SILENT 
+INFO  17:47:53,837 GenomeAnalysisEngine - Downsampling Settings: Method: BY_SAMPLE, Target Coverage: 1000 
+INFO  17:47:53,846 SAMDataSource$SAMReaders - Initializing SAMRecords in serial 
+INFO  17:47:53,896 SAMDataSource$SAMReaders - Done initializing BAM readers: total time 0.05 
+INFO  17:47:54,302 GenomeAnalysisEngine - Preparing for traversal over 1 BAM files 
+INFO  17:47:54,351 GenomeAnalysisEngine - Done preparing for traversal 
+INFO  17:47:54,351 ProgressMeter - [INITIALIZATION COMPLETE; STARTING PROCESSING] 
+INFO  17:47:54,351 ProgressMeter -                 | processed |    time |    per 1M |           |   total | remaining 
+INFO  17:47:54,352 ProgressMeter -        Location |     sites | elapsed |     sites | completed | runtime |   runtime 
+INFO  17:48:24,357 ProgressMeter - scaffold_39:1061577   9.6832427E7    30.0 s       0.0 s       51.1%    58.0 s      28.0 s 
+INFO  17:48:47,694 ProgressMeter -            done   1.89550516E8    53.0 s       0.0 s      100.0%    53.0 s       0.0 s 
+INFO  17:48:47,695 ProgressMeter - Total runtime 53.34 secs, 0.89 min, 0.01 hours 
+INFO  17:48:47,698 MicroScheduler - 366821 reads were filtered out during the traversal out of approximately 819319 total reads (44.77%) 
+INFO  17:48:47,699 MicroScheduler -   -> 0 reads (0.00% of total) failing BadCigarFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 75674 reads (9.24% of total) failing BadMateFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 0 reads (0.00% of total) failing DuplicateReadFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 0 reads (0.00% of total) failing FailsVendorQualityCheckFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 0 reads (0.00% of total) failing MalformedReadFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 0 reads (0.00% of total) failing MappingQualityUnavailableFilter 
+INFO  17:48:47,699 MicroScheduler -   -> 151913 reads (18.54% of total) failing MappingQualityZeroFilter 
+INFO  17:48:47,700 MicroScheduler -   -> 139234 reads (16.99% of total) failing NotPrimaryAlignmentFilter 
+INFO  17:48:47,700 MicroScheduler -   -> 0 reads (0.00% of total) failing Platform454Filter 
+INFO  17:48:47,700 MicroScheduler -   -> 0 reads (0.00% of total) failing UnmappedReadFilter 
+INFO  17:48:48,803 GATKRunReport - Uploaded run statistics report to AWS S3 
+
+real	0m59.370s
+user	1m15.068s
+sys	0m6.739s
++ set +x
+===============================================================
+11. Locally realign reads around indels.
+===============================================================
+Sun/Oracle Java SE Development Kit version 1.8.0_131 loaded.
++ java -XX:ParallelGCThreads=4 -Xmx32g -Xms32g -Djavaio.tmpdir=/N/dc2/scratch/xw63/PA2013/tmp -jar /N/soft/rhel6/gatk/3.4-0/GenomeAnalysisTK.jar -T IndelRealigner -R PA42.4.1.fasta -I /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam -targetIntervals /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.intervals -o /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned.bam
+INFO  17:48:50,731 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:48:50,733 HelpFormatter - The Genome Analysis Toolkit (GATK) v3.4-0-g7e26428, Compiled 2015/05/15 03:25:41 
+INFO  17:48:50,733 HelpFormatter - Copyright (c) 2010 The Broad Institute 
+INFO  17:48:50,733 HelpFormatter - For support and documentation go to http://www.broadinstitute.org/gatk 
+INFO  17:48:50,736 HelpFormatter - Program Args: -T IndelRealigner -R PA42.4.1.fasta -I /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup.bam -targetIntervals /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000.intervals -o /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned.bam 
+INFO  17:48:50,738 HelpFormatter - Executing as xw63@c70 on Linux 3.10.0-693.21.1.el7.x86_64 amd64; Java HotSpot(TM) 64-Bit Server VM 1.8.0_131-b11. 
+INFO  17:48:50,738 HelpFormatter - Date/Time: 2018/06/20 17:48:50 
+INFO  17:48:50,739 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:48:50,739 HelpFormatter - -------------------------------------------------------------------------------- 
+INFO  17:48:51,145 GenomeAnalysisEngine - Strictness is SILENT 
+INFO  17:48:51,216 GenomeAnalysisEngine - Downsampling Settings: No downsampling 
+INFO  17:48:51,222 SAMDataSource$SAMReaders - Initializing SAMRecords in serial 
+INFO  17:48:51,260 SAMDataSource$SAMReaders - Done initializing BAM readers: total time 0.04 
+INFO  17:48:51,323 GenomeAnalysisEngine - Preparing for traversal over 1 BAM files 
+INFO  17:48:51,326 GenomeAnalysisEngine - Done preparing for traversal 
+INFO  17:48:51,326 ProgressMeter - [INITIALIZATION COMPLETE; STARTING PROCESSING] 
+INFO  17:48:51,326 ProgressMeter -                 | processed |    time |    per 1M |           |   total | remaining 
+INFO  17:48:51,327 ProgressMeter -        Location |     reads | elapsed |     reads | completed | runtime |   runtime 
+INFO  17:48:51,389 ReadShardBalancer$1 - Loading BAM index data 
+INFO  17:48:51,390 ReadShardBalancer$1 - Done loading BAM index data 
+INFO  17:49:21,330 ProgressMeter - scaffold_496:1532    816019.0    30.0 s      36.0 s      100.0%    30.0 s       0.0 s 
+INFO  17:49:22,397 ProgressMeter -            done   1399732.0    31.0 s      22.0 s      100.0%    31.0 s       0.0 s 
+INFO  17:49:22,398 ProgressMeter - Total runtime 31.07 secs, 0.52 min, 0.01 hours 
+INFO  17:49:22,403 MicroScheduler - 0 reads were filtered out during the traversal out of approximately 1399732 total reads (0.00%) 
+INFO  17:49:22,404 MicroScheduler -   -> 0 reads (0.00% of total) failing BadCigarFilter 
+INFO  17:49:22,404 MicroScheduler -   -> 0 reads (0.00% of total) failing MalformedReadFilter 
+INFO  17:49:23,089 GATKRunReport - Uploaded run statistics report to AWS S3 
+
+real	0m34.221s
+user	1m2.962s
+sys	0m3.865s
++ set +x
+===============================================================
+12. Clip overlapping read pairs.
+===============================================================
++ /N/soft/rhel6/bamUtil/1.0.13/bam clipOverlap --in /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned.bam --out /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned_Clipped.bam
+Completed ClipOverlap Successfully.
+
+real	0m24.301s
+user	0m23.398s
+sys	0m0.748s
++ set +x
+===============================================================
+13. Index the clipped BAM file using Samtools
+===============================================================
++ /N/soft/rhel6/samtools/1.3.1/bin/samtools index /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned_Clipped.bam
+
+real	0m1.633s
+user	0m1.486s
+sys	0m0.033s
++ set +x
+===============================================================
+14. Make the mpileup file from the BAM file.
+===============================================================
++ /N/soft/rhel6/samtools/1.3.1/bin/samtools mpileup -f PA42.4.1.fasta /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-000-RG_Sorted_dedup_realigned_Clipped.bam
+[mpileup] 1 samples in 1 input files
+<mpileup> Set max per-file depth to 8000
+
+real	0m46.217s
+user	0m43.300s
+sys	0m2.819s
++ set +x
+===============================================================
+=============Task completed.===================
+===============================================================

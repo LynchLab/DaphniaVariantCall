@@ -1,6 +1,58 @@
-	=============================================================
-	#	How to make and run the genome mapping/mapgd pipelines  #
-	=============================================================
+		======================================================
+		#  How to make and run the genome mapping pipelines  #
+		======================================================
+
+1. Save all Your raw reads in DATA_DIR in a sub dir ./fastq/, name you files in this way: 
+	SampleID-001-R1.fastq
+	SampleID-001-R2.fastq
+	SampleID-002-R1.fastq
+	SampleID-002-R2.fastq
+			...
+	SampleID-100-R1.fastq
+	SampleID-100-R2.fastq
+
+2. Indexing the reference genome using the following command:
+	============================================================
+		export ref_genome="PA42.4.0"
+		
+		bwa index $ref_genome.fasta 
+		
+		novoindex $ref_genome.ndx $ref_genome.fasta 
+		
+		hisat2-build $ref_genome.fasta $ref_genome
+
+		samtools faidx $ref_genome.fasta
+		
+		PICARD  CreateSequenceDictionary R=$ref_genome.fasta O=$ref_genome.dict
+	============================================================
+	
+3. Prepare the adapter files, and save it as:
+	
+	/PATH/To/Your/Adapters.fa
+
+4. Edit MGMP.pl, change the settings according to your data:
+
+	Your reference genome: 
+		$ref_genome="PA42.4.1"
+	Your adapter sequence file name: 
+		$Adapters="/N/u/xw63/Carbonate/daphnia/Bioo_Adapters.fa";
+	Your maximum number of file numbering: 
+		$MaxNumberofSamples=150;
+	Your email address: $emailaddress='ouqd@hotmail.com'
+	
+4. Make pipeline pbs files:
+
+	==============================================================
+		perl MGMP.pl bwa path SampleID
+	==============================================================
+	
+	pipeline .pbs files will be produced for each pair of reads, 
+	and the pbs files are saved in the current directory:
+	./SampleID-001.pbs
+	./SampleID-002.pbs
+			...
+	./SampleID-100.pbs
+	
 	
 To make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
@@ -15,24 +67,41 @@ To make and run the genome mapping/mapgd pipelines in large scale, simply run:
   #                                                               #
   #     To make genome mapping pipelines using bwa:               #
   #                                                               #
-         perl Make_pipelines-Genome-mapping.pl bwa path sampleID
+				perl MGMP.pl bwa path sampleID
   #                                                               #
   #     To make genome mapping pipelines using novalign:          #
   #                                                               #
-      perl Make_pipelines-Genome-mapping.pl novalign path sampleID
+				perl MGMP.pl novalign path sampleID
   #                                                               #
   #     To make genome mapping pipelines using hisat2:            #
   #                                                               #
-       perl Make_pipelines-Genome-mapping.pl hisat path sampleID
+				perl MGMP.pl hisat path sampleID
   #                                                               #
   =================================================================
 
-Run the Make_pipelines-Genome-mapping perl script for the aligner you choose to make the pipelines and then 
+Run the  perl script MGMP.pl with appropriate args for the aligner you choose to make the pipelines and then, 
 
-For a detailed description for each pipeline, read the following Readme:
+5. Submit the produced pipeline pbs jobs to the system for computing:
+	
+	For bwa:
 
-0README-1.genome mapping-Bwa.txt
-0README-2.genome mapping-Hisat.txt
-0README-3.genome mapping-Novoalign.txt
+	======================================
+		chmod 755 qsub_all_pbs-bwa.sh
+		./qsub_all_pbs-bwa.sh
+	======================================
 
+	For hisat:
+	
+	======================================
+		chmod 755 qsub_all_pbs-hisat.sh
+		./qsub_all_pbs-hisat.sh
+	======================================
 
+	For novoalign:
+
+	======================================
+		chmod 755 qsub_all_pbs-novoalign.sh
+		./qsub_all_pbs-novoalign.sh
+	======================================
+
+==========End=======
