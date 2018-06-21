@@ -41,16 +41,16 @@ This program is useful for genome mapping in large scale. If you have a large nu
 
 4.Edit MGMP.pl, change the settings according to your data:
 
-	#Your reference genome: 
+	Your reference genome: 
 		$ref_genome="PA42.4.1"
 		
-	#Your adapter sequence file name: 
+	Your adapter sequence file name: 
 		$Adapters="/PATH/To/Your/Adapters.fa";
 		
-	#Your maximum number of file numbering: 
+	Your maximum number of file numbering: 
 		$MaxNumberofSamples=150;
 	
-	#Your email address: 
+	Your email address: 
 		$emailaddress='xxx@xxx.xxx'
 	
 4.Make pipeline pbs files, to make and run the genome mapping/mapgd pipelines in large scale, simply run:
@@ -60,22 +60,22 @@ This program is useful for genome mapping in large scale. If you have a large nu
  Your screen will show a menu:
 
   =================================================================
-  #                                                               #
-  #     To make genome mapping pipelines, execute the             #
-  # following commands, and follow the instructions they give:    #
-  #                                                               #
-  #     To use bwa:              				  #
-  #                                                               #
-		perl MGMP.pl bwa <DATA_DIR> <sampleID>
-  #                                                               #
-  #     To use novalign:          				  #
-  #                                                               #
-		perl MGMP.pl novoalign <DATA_DIR> <sampleID>
-  #                                                               #
-  #     To use hisat2:            				  #
-  #                                                               #
-		perl MGMP.pl hisat <DATA_DIR> <sampleID>
-  #                                                               #
+                                                                 
+       To make genome mapping pipelines, execute the             
+   following commands, and follow the instructions they give:    
+                                                                 
+       To use bwa:              				  
+                                                                 
+			perl MGMP.pl bwa <DATA_DIR> <sampleID>
+                                                                 
+       To use novalign:          				  
+                                                                 
+			perl MGMP.pl novoalign <DATA_DIR> <sampleID>
+                                                                 
+       To use hisat2:            				  
+                                                                 
+			perl MGMP.pl hisat <DATA_DIR> <sampleID>
+                                                                 
   =================================================================
 Please copy and execute one of the above commands with appropriate args.
 	
