@@ -1,0 +1,51 @@
+#!/bin/bash	
+#PBS -N hisat-NoSpliced-001
+#PBS -l nodes=1:ppn=16
+#PBS -l vmem=100gb
+#PBS -l walltime=6:00:00
+#PBS -M ouqd@hotmail.com
+#PBS -m abe
+#PBS -j oe
+
+# This pipeline pbs is produced by the perl script:
+# perl MGMP.pl hisat /N/dc2/scratch/xw63/PA2013 PA2013
+# Date and time: Wed Jun 20 20:47:26 2018
+
+set +x
+module load samtools
+module load java
+ulimit -s
+set -x
+cd /N/u/xw63/Carbonate/daphnia/genome_index
+mkdir /N/dc2/scratch/xw63/PA2013/Hisat
+mkdir /N/dc2/scratch/xw63/PA2013/tmp
+set +x
+echo ===============================================================
+echo 0. making index files, which should be done before submitting pbs
+echo ===============================================================
+
+echo ===============================================================
+echo 1. After preparing the FASTA file of adapter sequences, trim adapter sequences from sequence reads.
+echo ===============================================================
+
+module load java
+set -x
+
+set +x
+echo ===============================================================
+echo 3. Mapping reads to the reference sequence and output bam file.
+echo ===============================================================
+
+set -x
+
+
+time /N/soft/rhel7/hisat2/2.1.0/hisat2 --no-spliced-alignment -p 16 -q -x PA42.4.1 -1 /N/dc2/scratch/xw63/PA2013/fastq/PA2013-001-R1-paired.fq -2 /N/dc2/scratch/xw63/PA2013/fastq/PA2013-001-R2-paired.fq -S /N/dc2/scratch/xw63/PA2013/Hisat/PA2013-001-paired.sam &
+
+wait 
+
+	
+set +x
+echo ===============================================================
+echo =============Task completed.===================
+echo ===============================================================
+	
