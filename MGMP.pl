@@ -1,35 +1,22 @@
 #! /N/soft/rhel7/perl/gnu/5.24.1/bin/perl -w
-=pod
-======================================================================
-Usage: This program is useful for genome mapping in large scale. 
-Features:
-
-(1) To make it as simple as possible, I have integrated the three alignment tools (bwa, hisat, and novoalign) into one single Perl script. One can select an alignment tool, the data directory and the population ID simply by using a command line with three args.
-
-============================================================
-
-	perl MGMP.pl bwa path sampleID
-	perl MGMP.pl novoalign path sampleID
-	perl MGMP.pl hisat path sampleID
-	
-============================================================
-(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier for debugging where and why the problem(s) produced in the process.
-
-=====================================================================
-Written by:                   
-Xiaolong Wang 
-Email: ouqd@hotmail.com
-Website: http://www.DNAplusPro.com
-=====================================================================
-In hope useful in genomics and bioinformatics studies.
-This software is released under GNU/GPL license
-Copyright (c) 2018, Ocean University of China
-Lynch Lab, CME, Biodesign, Arizona State University
-=====================================================================
-=cut
-
 
 #alignment tool: bwa, hisat, or novoalign
+
+print "\n\n This program is useful for genome mapping in large scale. It  produces the enome mapping pipeline pbs files for large number of pair-ended reads:
+
+	Usage: perl MGMP.pl <aln> <data_path> <output>
+	
+	aln = bwa / novoalign / hisat 
+	data_path = your data directory, your fastq files should be saved in a sub directory: /data_path/fastq/
+	output = the common initial of your output file names
+	
+	"; 
+	
+if(@ARGV < 3)
+{
+	print "\n\n\t\tPlease input the <aln> <data path> and <output file name>.\n\n"; 
+	exit
+}
 
 $aln=lc($ARGV[0]);
 
@@ -122,7 +109,7 @@ while ($n<=$MaxNumberofSamples+1) {
 if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){ 
 	#print ", Okay, this pair-end reads fastq file is found! lets make a pbs file:"; 
 	$n1=$n1+1;	
-	$pbsfile=$DATA_DIR."/pbs/$aln-".$SampleID."-".$nstr001.".pbs";
+	$pbsfile=$DATA_DIR."/$aln-".$SampleID."-".$nstr001.".pbs";
 	print $n1.": ";
 	print $SampleID."-".$nstr001."-R1/R2.fastq  -->  ";
 	print $pbsfile."\n";
@@ -358,7 +345,7 @@ else
 print "\n
 ============================================================
 $n1 pbs files are produced and saved in: 
-	$DATA_DIR/pbs/
+	$DATA_DIR/
   $aln-$SampleID-000.pbs, 
   $aln-$SampleID-001.pbs,
   ... ... 
@@ -391,8 +378,38 @@ To debug, two small-sized pair-ended fastq read files, named as:
 should be prepared and saved in the data directory:
 		$DATA_DIR
 Then, type the following commands: 
-		qsub -q debug $DATA_DIR/pbs/$aln-$SampleID-000.pbs			
+		qsub -q debug $DATA_DIR/$aln-$SampleID-000.pbs			
 ============================================================
 
 ";
 }
+
+=pod
+======================================================================
+ This program is useful for genome mapping in large scale. 
+Features:
+
+(1) To make it as simple as possible, I have integrated the three alignment tools (bwa, hisat, and novoalign) into one single Perl script. One can select an alignment tool, the data directory and the population ID simply by using a command line with three args.
+
+============================================================
+
+	Usage: perl MGMP.pl <aln> <path> <sampleID>
+	
+	aln= bwa or novoalign or hisat 
+	
+============================================================
+(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier for debugging where and why the problem(s) produced in the process.
+
+=====================================================================
+Written by:                   
+Xiaolong Wang 
+Email: ouqd@hotmail.com
+Website: http://www.DNAplusPro.com
+=====================================================================
+In hope useful in genomics and bioinformatics studies.
+This software is released under GNU/GPL license
+Copyright (c) 2018, Ocean University of China
+Lynch Lab, CME, Biodesign, Arizona State University
+=====================================================================
+=cut
+
