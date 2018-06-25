@@ -1,13 +1,33 @@
-#! /bin/usr/perl -w
-#Save all your raw reads in the DATA_DIR in a sub dir named as SampleID/fastq/
-#Name you files like: 
-#SampleID-001-R1.fastq
-#SampleID-001-R2.fastq
-#SampleID-002-R1.fastq
-#SampleID-002-R2.fastq
-#......
-#SampleID-100-R1.fastq
-#SampleID-100-R2.fastq
+#! /N/soft/rhel7/perl/gnu/5.24.1/bin/perl -w
+=pod
+======================================================================
+Usage: This program is useful for genome mapping in large scale. 
+Features:
+
+(1) To make it as simple as possible, I have integrated the three alignment tools (bwa, hisat, and novoalign) into one single Perl script. One can select an alignment tool, the data directory and the population ID simply by using a command line with three args.
+
+============================================================
+
+	perl MGMP.pl bwa path sampleID
+	perl MGMP.pl novoalign path sampleID
+	perl MGMP.pl hisat path sampleID
+	
+============================================================
+(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier for debugging where and why the problem(s) produced in the process.
+
+=====================================================================
+Written by:                   
+Xiaolong Wang 
+Email: ouqd@hotmail.com
+Website: http://www.DNAplusPro.com
+=====================================================================
+In hope useful in genomics and bioinformatics studies.
+This software is released under GNU/GPL license
+Copyright (c) 2018, Ocean University of China
+Lynch Lab, CME, Biodesign, Arizona State University
+=====================================================================
+=cut
+
 
 #alignment tool: bwa, hisat, or novoalign
 
@@ -24,7 +44,7 @@ print "\n\nYou have selected the alignment tool: $aln\n\n";
 
 if ($aln ne "bwa"&&$aln ne "hisat"&&$aln ne "novoalign")
 {
-	print "\nThe 1st input (args) is invalid. 
+	print "\n\nThe 1st input (args) is invalid. 
 	The 1st args is the alignment tool, 
 	it must be: bwa, hisat, or novoalign.\n\n"; 
 	exit
@@ -34,14 +54,14 @@ $DATA_DIR=$ARGV[1];
 
 if(!(-e (glob($DATA_DIR))[0]))
 {
-	print "\nThe 2nd input (args) is the data directory. The data directory is not found:
+	print "\n\nThe 2nd input (args) is the data directory. The data directory is not found:
 				$DATA_DIR
 	
 	"; 
 	exit
 }
 
-print "\n The data directory is:
+print "\n\n The data directory is:
 				$DATA_DIR
 	"; 
 
@@ -315,7 +335,23 @@ else
 }
 if ($n1==0)
 {
-	print "No R1/R2.fq read file is found in $DATA_DIR.\n\n\n";
+	print "
+	
+	No pair-ended read file is found in the data directory:
+		$DATA_DIR
+	the pair-ended read files must be named as:
+	$SampleID-001-R1.fq 
+	$SampleID-001-R2.fq
+	
+	$SampleID-002-R1.fq 
+	$SampleID-002-R2.fq
+	
+	...
+	
+	$SampleID-100-R1.fq 
+	$SampleID-100-R2.fq
+	
+	\n\n\n";
 }
 else
 {
