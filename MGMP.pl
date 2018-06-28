@@ -234,7 +234,7 @@ time $samtools view -bS $OUTPUT.sam > $OUTPUT.bam
 
 set +x
 echo ===============================================================
-echo 8-1. remove unwanted reads and multiple mapped reads.
+echo 5-1. remove unwanted reads and multiple mapped reads.
 echo ===============================================================
 module load java
 set -x
@@ -260,7 +260,7 @@ echo ===============================================================
 
 set -x
 	
-time $PICARD SortSam INPUT=$OUTPUT.bam OUTPUT=$OUTPUT-Sorted.bam SORT_ORDER=coordinate
+time $PICARD SortSam INPUT=$OUTPUT-qFf.bam OUTPUT=$OUTPUT-qFf-Sorted.bam SORT_ORDER=coordinate
 set +x
 
 echo ===============================================================
@@ -269,7 +269,7 @@ echo ===============================================================
 module load java
 set -x
 
-time $PICARD AddOrReplaceReadGroups INPUT=$OUTPUT-Sorted.bam OUTPUT=$OUTPUT-RG_Sorted.bam RGID=Daphnia RGLB=bar RGPL=illumina RGSM=$Sample RGPU=6
+time $PICARD AddOrReplaceReadGroups INPUT=$OUTPUT-qFf-Sorted.bam OUTPUT=$OUTPUT-qFf-RG_Sorted.bam RGID=Daphnia RGLB=bar RGPL=illumina RGSM=$Sample RGPU=6
 set +x
 
 echo ===============================================================
@@ -278,7 +278,7 @@ echo ===============================================================
 
 set -x
 module load java
-time $PICARD MarkDuplicates INPUT=$OUTPUT-RG_Sorted.bam OUTPUT=$OUTPUT-RG_Sorted_dedup.bam METRICS_FILE=$OUTPUT-metrics.txt
+time $PICARD MarkDuplicates INPUT=$OUTPUT-qFf-RG_Sorted.bam OUTPUT=$OUTPUT-qFf-RG_Sorted_dedup.bam METRICS_FILE=$OUTPUT-qFf-metrics.txt
     
 echo ===============================================================
 echo 9. Index the BAM file using Picard.
@@ -286,7 +286,7 @@ echo ===============================================================
 
 module load java
 set -x
-time $PICARD BuildBamIndex INPUT=$OUTPUT-RG_Sorted_dedup-qFf.bam
+time $PICARD BuildBamIndex INPUT=$OUTPUT-qFf-RG_Sorted_dedup.bam
 
 set +x
 echo ===============================================================
@@ -295,7 +295,7 @@ echo ===============================================================
 
 module load java
 set -x
-time $GATK -T RealignerTargetCreator -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup-qFf.bam -o $OUTPUT.intervals
+time $GATK -T RealignerTargetCreator -R $ref_genome.fasta -I $OUTPUT-qFf-RG_Sorted_dedup.bam -o $OUTPUT.intervals
 
 set +x
 echo ===============================================================
@@ -305,7 +305,7 @@ echo ===============================================================
 module load java
 set -x
 
-time $GATK -T IndelRealigner -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup-qFf.bam -targetIntervals $OUTPUT.intervals -o $OUTPUT-RG_Sorted_dedup-qFf_realigned.bam
+time $GATK -T IndelRealigner -R $ref_genome.fasta -I $OUTPUT-qFf-RG_Sorted_dedup.bam -targetIntervals $OUTPUT.intervals -o $OUTPUT-qFf-RG_Sorted_dedup_realigned.bam
 
 set +x
 echo ===============================================================
@@ -314,7 +314,7 @@ echo ===============================================================
 
 set -x
 
-time $bam clipOverlap --in $OUTPUT-RG_Sorted_dedup-qFf_realigned.bam --out $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam
+time $bam clipOverlap --in $OUTPUT-qFf-RG_Sorted_dedup_realigned.bam --out $OUTPUT-qFf-RG_Sorted_dedup_realigned_Clipped.bam
 set +x
 echo ===============================================================
 echo 13. Index the clipped BAM file using Samtools
@@ -322,7 +322,7 @@ echo ===============================================================
 
 set -x
 
-time $samtools index $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam
+time $samtools index $OUTPUT-qFf-RG_Sorted_dedup_realigned_Clipped.bam
 set +x
 echo ===============================================================
 echo 14. Make the mpileup file from the BAM file.
@@ -330,7 +330,7 @@ echo ===============================================================
 
 set -x
 	
-time $samtools mpileup -f $ref_genome.fasta $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam > $OUTPUT.mpileup
+time $samtools mpileup -f $ref_genome.fasta $OUTPUT-qFf-RG_Sorted_dedup_realigned_Clipped.bam > $OUTPUT.mpileup
 
 set +x
 echo ===============================================================
