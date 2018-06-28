@@ -12,7 +12,7 @@ print "\n\n This program is useful for genome mapping in large scale. It  produc
 	
 	"; 
 	
-if(@ARGV < 3)
+if(@ARGV != 3)
 {
 	print "\n\n\t\tPlease input the <aln> <data path> and <output file name>.\n\n"; 
 	exit
@@ -71,8 +71,6 @@ $ref_genome="PA42.4.1";
 # The adapter file: an example (Bioo_Adapters.fa) can be found in the  directory:
 #$Adapters="/PATH/TO/Adapters.fa";
 $Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
-
-
 
 # The paths to the software used in this pipeline
 # You must first make sure you have all these software installed and they are all functional
@@ -183,6 +181,7 @@ set -x
 cd $work_dir
 mkdir $OUTPUT_DIR
 mkdir $tmp_DIR
+
 set +x
 echo ===============================================================
 echo 0. making index files, which should be done before submitting pbs
@@ -199,8 +198,8 @@ echo ===============================================================
 echo 1. After preparing the FASTA file of adapter sequences, trim adapter sequences from sequence reads.
 echo ===============================================================
 
-module load java
 set -x
+module load java
 
 time $Trimmomatic PE $Sample_R1.fastq $Sample_R2.fastq $Sample_R1-paired.fq $Sample_R1-unpaired.fq $Sample_R2-paired.fq $Sample_R2-unpaired.fq HEADCROP:3 ILLUMINACLIP:$Adapters:2:30:10:2 SLIDINGWINDOW:4:15 MINLEN:30
 set +x
@@ -219,8 +218,8 @@ echo ===============================================================
 echo 4. Combine the SAM files using Picard.
 echo ===============================================================
 
-module load java
 set -x
+module load java
 
 $Combine_comand
 
@@ -232,12 +231,33 @@ echo ===============================================================
 set -x
 	
 time $samtools view -bS $OUTPUT.sam > $OUTPUT.bam
+
+set +x
+echo ===============================================================
+echo 8-1. remove unwanted reads and multiple mapped reads.
+echo ===============================================================
+module load java
+set -x
+
+time $samtools view -q 20 -f 3 -F 3844 -b $OUTPUT.bam > $OUTPUT-qFf.bam
+
+set +x
+
+ echo -f 3: remains only
+ echo read paired: 0x1
+ echo read mapped in proper pair: 0x2
+ echo -F 3844: removes：
+ echo read unmapped: 0x4
+ echo not primary alignment: 0x100
+ echo read fails platform/vendor quality checks: 0x200
+ echo read is PCR or optical duplicate: 0x400
+ echo supplementary alignment: 0x800
+
 set +x
 echo ===============================================================
 echo 6. Sort the BAM file using Picard.
 echo ===============================================================
 
-module load java
 set -x
 	
 time $PICARD SortSam INPUT=$OUTPUT.bam OUTPUT=$OUTPUT-Sorted.bam SORT_ORDER=coordinate
@@ -251,21 +271,23 @@ set -x
 
 time $PICARD AddOrReplaceReadGroups INPUT=$OUTPUT-Sorted.bam OUTPUT=$OUTPUT-RG_Sorted.bam RGID=Daphnia RGLB=bar RGPL=illumina RGSM=$Sample RGPU=6
 set +x
+
 echo ===============================================================
-echo 8. Mark duplicate reads.
+echo 8. Mark duplicate reads .
 echo ===============================================================
 
-module load java
 set -x
-time $PICARD MarkDuplicates MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=100 MAX_RECORDS_IN_RAM=5000000 VALIDATION_STRINGENCY=LENIENT REMOVE_DUPLICATES=true INPUT=$OUTPUT-RG_Sorted.bam OUTPUT=$OUTPUT-RG_Sorted_dedup.bam METRICS_FILE=$OUTPUT-metrics.txt
-set +x
+module load java
+time $PICARD MarkDuplicates INPUT=$OUTPUT-RG_Sorted.bam OUTPUT=$OUTPUT-RG_Sorted_dedup.bam METRICS_FILE=$OUTPUT-metrics.txt
+    
 echo ===============================================================
 echo 9. Index the BAM file using Picard.
 echo ===============================================================
 
 module load java
 set -x
-time $PICARD BuildBamIndex INPUT=$OUTPUT-RG_Sorted_dedup.bam
+time $PICARD BuildBamIndex INPUT=$OUTPUT-RG_Sorted_dedup-qFf.bam
+
 set +x
 echo ===============================================================
 echo 10. Define intervals to target for the local realignment.
@@ -273,7 +295,8 @@ echo ===============================================================
 
 module load java
 set -x
-time $GATK -T RealignerTargetCreator -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup.bam -o $OUTPUT.intervals
+time $GATK -T RealignerTargetCreator -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup-qFf.bam -o $OUTPUT.intervals
+
 set +x
 echo ===============================================================
 echo 11. Locally realign reads around indels.
@@ -282,7 +305,8 @@ echo ===============================================================
 module load java
 set -x
 
-time $GATK -T IndelRealigner -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup.bam -targetIntervals $OUTPUT.intervals -o $OUTPUT-RG_Sorted_dedup_realigned.bam
+time $GATK -T IndelRealigner -R $ref_genome.fasta -I $OUTPUT-RG_Sorted_dedup-qFf.bam -targetIntervals $OUTPUT.intervals -o $OUTPUT-RG_Sorted_dedup-qFf_realigned.bam
+
 set +x
 echo ===============================================================
 echo 12. Clip overlapping read pairs.
@@ -290,7 +314,7 @@ echo ===============================================================
 
 set -x
 
-time $bam clipOverlap --in $OUTPUT-RG_Sorted_dedup_realigned.bam --out $OUTPUT-RG_Sorted_dedup_realigned_Clipped.bam
+time $bam clipOverlap --in $OUTPUT-RG_Sorted_dedup-qFf_realigned.bam --out $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam
 set +x
 echo ===============================================================
 echo 13. Index the clipped BAM file using Samtools
@@ -298,7 +322,7 @@ echo ===============================================================
 
 set -x
 
-time $samtools index $OUTPUT-RG_Sorted_dedup_realigned_Clipped.bam
+time $samtools index $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam
 set +x
 echo ===============================================================
 echo 14. Make the mpileup file from the BAM file.
@@ -306,7 +330,7 @@ echo ===============================================================
 
 set -x
 	
-time $samtools mpileup -f $ref_genome.fasta $OUTPUT-RG_Sorted_dedup_realigned_Clipped.bam > $OUTPUT.mpileup
+time $samtools mpileup -f $ref_genome.fasta $OUTPUT-RG_Sorted_dedup-qFf_realigned_Clipped.bam > $OUTPUT.mpileup
 
 set +x
 echo ===============================================================
