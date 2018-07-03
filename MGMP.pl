@@ -61,16 +61,13 @@ if ($SampleID eq "")
 }
 
 $tmp_DIR=$DATA_DIR."/tmp";
-$MaxNumberofSamples=125;
+$MaxNumberofSamples=999;
 $emailaddress='ouqd@hotmail.com';
 
 #ref_genome index path and file
 $work_dir="/N/u/xw63/Carbonate/daphnia/genome_index";
 $ref_genome="PA42.4.1";
 
-# The adapter file: an example (Bioo_Adapters.fa) can be found in the  directory:
-#$Adapters="/PATH/TO/Adapters.fa";
-$Adapters="/N/u/xw63/Carbonate/daphnia/Adapters/Bioo_Adapters.fa";
 
 # The paths to the software used in this pipeline
 # You must first make sure you have all these software installed and they are all functional
@@ -104,6 +101,11 @@ while ($n<=$MaxNumberofSamples+1) {
 	$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2";
 	$OUTPUT_DIR=$DATA_DIR."/".ucfirst($aln);
 	$OUTPUT=$OUTPUT_DIR."/".$SampleID."-".$nstr001;
+	
+# The adapter file saved in the  directory:
+$Adapters_dir="/N/u/xw63/Carbonate/daphnia/Adapters/";
+$Adapters=$Adapters_dir.$SampleID."-".$nstr001."_Adapters.fa";
+
 if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){ 
 	#print ", Okay, this pair-end reads fastq file is found! lets make a pbs file:"; 
 	$n1=$n1+1;	
@@ -170,7 +172,7 @@ print OUT
 #PBS -j oe
 
 # This pipeline pbs is produced by the perl script:
-# perl Make_pipelines-Genome-mapping.pl $ARGV[0] $ARGV[1] $ARGV[2]
+# perl MGMP.pl $ARGV[0] $ARGV[1] $ARGV[2]
 # Date and time: $localtime
 
 set +x
