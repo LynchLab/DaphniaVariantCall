@@ -4,40 +4,40 @@
 #### Initialized May 28, 2018
 
 
-		======================================================
-		   How to make and run the genome mapping pipelines  
-		======================================================
+		
+### How to make and run the genome mapping pipelines  
+		
 
 This program is useful for genome mapping in large scale. Features:
 
 (1) To make it as simple as possible, I have integrated the three alignment tools (bwa, hisat, and novoalign) into one single Perl script. One can select an alignment tool, the data directory and the population ID simply by using a command line with three args.
 
-	============================================================
+	
 
 		perl MGMP.pl bwa path sampleID
 		perl MGMP.pl novoalign path sampleID
 		perl MGMP.pl hisat path sampleID
 		
-	============================================================
+	
 
-(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier for debugging where and why the problem(s) produced in the process.
+(2) The pipeline (.pbs) files produced by this Perl script are well-curated, so that after executing, their outputs are also well commented, showing the commands executed, the outputs, the error information, and the time used in each step, makes it much easier to debug errors, to locate where and why the problem(s) produced in the process.
 
 
-If you have a large number (up to hundreds) of NGS sequencing reads to map onto a reference genome, following these steps for mapping the reads:
-1.Save all Your raw reads in DATA_DIR in a sub dir ./fastq/, name you files in this way: 
+If you have a large number (hundreds) of NGS sequencing reads to map onto a reference genome, following these steps for mapping the reads:
+1.Save all Your raw reads in DATA_DIR in a sub dir ./fastq/, name (or creat a link to) you files in this way: 
 
-	SampleID-001-R1.fastq
-	SampleID-001-R2.fastq
-	SampleID-002-R1.fastq
-	SampleID-002-R2.fastq
-			...
-	SampleID-100-R1.fastq
-	SampleID-100-R2.fastq
+		SampleID-001-R1.fastq
+		SampleID-001-R2.fastq
+		SampleID-002-R1.fastq
+		SampleID-002-R2.fastq
+				...
+		SampleID-100-R1.fastq
+		SampleID-100-R2.fastq
 
-2.Indexing the reference genome using the following command:
+2.Index the reference genome using the following command:
 
-	============================================================
-		export ref_genome="PA42.4.0"
+	
+		export ref_genome"PA42.4.0"
 		
 		bwa index $ref_genome.fasta 
 		
@@ -47,12 +47,12 @@ If you have a large number (up to hundreds) of NGS sequencing reads to map onto 
 
 		samtools faidx $ref_genome.fasta
 		
-		PICARD  CreateSequenceDictionary R=$ref_genome.fasta O=$ref_genome.dict
-	============================================================
+		PICARD  CreateSequenceDictionary R$ref_genome.fasta O$ref_genome.dict
 	
-3.Prepare the adapter files, and save it as:
 	
-	/PATH/To/Your/Adapters.fa
+3.Prepare the adapter files, and save them as:
+	
+	/PATH/To/Your/SampleID-001_Adapters.fa
 
 4.Edit MGMP.pl, change the settings according to your data:
 
@@ -63,22 +63,22 @@ If you have a large number (up to hundreds) of NGS sequencing reads to map onto 
 		$Adapters="/PATH/To/Your/Adapters.fa";
 		
 	Your maximum number of file numbering: 
-		$MaxNumberofSamples=150;
+		$MaxNumberofSamples=999;
 	
 	Your email address: 
-		$emailaddress='xxx@xxx.xxx'
+		$emailaddress'xxx@xxx.xxx'
 	
 4.Make pipeline pbs files, to make and run the genome mapping/mapgd pipelines in large scale, simply run:
 
-	=================================================================
+	
   
- 			./Make_pipelines.sh
+ 		./Make_pipelines.sh
 			
-	=================================================================
+	
   
  Your screen will show a menu:
 
-  =================================================================
+  
                                                                  
        To make genome mapping pipelines, execute the 
        following commands, and follow the instructions they give:    
@@ -95,82 +95,56 @@ If you have a large number (up to hundreds) of NGS sequencing reads to map onto 
                                                                  
 			perl MGMP.pl hisat <DATA_DIR> <sampleID>
                                                                  
-  =================================================================
+  
   
 Please copy and execute one of the above commands with appropriate args.
 	
 A series of pipeline .pbs files will be produced for each pair of reads, 
-and the pbs files are saved in the data directory in a sub directory, DATA_DIR/pbs/:
+and the pbs files are saved in the data directory, DATA_DIR:
 
 For bwa:
 
-=================================================================
 
-	DATA_DIR/pbs/bwa-SampleID-001.pbs
-	DATA_DIR/pbs/bwa-SampleID-002.pbs
-			...
-	DATA_DIR/pbs/bwa-SampleID-100.pbs
-	
-  =================================================================
+
+		DATA_DIR/pbs/bwa-SampleID-001.pbs
+		DATA_DIR/pbs/bwa-SampleID-002.pbs
+				...
+		DATA_DIR/pbs/bwa-SampleID-100.pbs
 
 For novoalign:
 	
-  =================================================================
-  
-	DATA_DIR/pbs/novoalign-SampleID-001.pbs
-	DATA_DIR/pbs/novoalign-SampleID-002.pbs
-			...
-	DATA_DIR/pbs/novoalign-SampleID-100.pbs
-
-  =================================================================
-
+		DATA_DIR/pbs/novoalign-SampleID-001.pbs
+		DATA_DIR/pbs/novoalign-SampleID-002.pbs
+				...
+		DATA_DIR/pbs/novoalign-SampleID-100.pbs
 For hisat:
 	
-  =================================================================
-  
-	DATA_DIR/pbs/hisat-SampleID-001.pbs
-	DATA_DIR/pbs/hisat-SampleID-002.pbs
-			...
-	DATA_DIR/pbs/hisat-SampleID-100.pbs
-	
-  =================================================================
-	
+		DATA_DIR/pbs/hisat-SampleID-001.pbs
+		DATA_DIR/pbs/hisat-SampleID-002.pbs
+				...
+		DATA_DIR/pbs/hisat-SampleID-100.pbs
 
-Run the  perl script MGMP.pl with appropriate args for the aligner you choose to make the pipelines and then, 
+Run the perl script MGMP.pl with appropriate args for the aligner you choose to make the pipelines. 
 
-5. The perl script MGMP.pl also produced a shell script to submit these pbs jobs.
-To submit the produced pipeline pbs jobs to the system for computing:
+5. The perl script MGMP.pl also produced a bash shell script to submit these pbs jobs. To submit the produced pipeline pbs jobs to the system for computing:
 	
 	For bwa:
-
-	======================================
 	
-	chmod 755 qsub_all_pbs-bwa.sh
-	
-	./qsub_all_pbs-bwa.sh
-		
-	======================================
+		chmod 755 qsub_all_pbs-bwa.sh
+		./qsub_all_pbs-bwa.sh
 
 	For hisat:
 	
-	======================================
 	
-	chmod 755 qsub_all_pbs-hisat.sh
 	
-	./qsub_all_pbs-hisat.sh
+		chmod 755 qsub_all_pbs-hisat.sh	
+		./qsub_all_pbs-hisat.sh
 		
-	======================================
-
 	For novoalign:
-
-	======================================
 	
-	chmod 755 qsub_all_pbs-novoalign.sh
-	
-	./qsub_all_pbs-novoalign.sh
+		chmod 755 qsub_all_pbs-novoalign.sh
+		./qsub_all_pbs-novoalign.sh
 		
-	======================================
-
 Then wait for the results and outputs.
 
-========================End======================
+#### End
