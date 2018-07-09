@@ -86,7 +86,7 @@ $novoindex_ref_genome= "$ref_genome.ndx";
 
 #Now we find the raw reads and produce pbs files for them
 
-open OUT1, ">./qsub_all_pbs-$aln.sh" or die "cannot open file: $!";
+open OUT1, ">./qsub_all_pbs-$aln-$SampleID.sh" or die "cannot open file: $!";
 
 $n=0;
 $n1=0;
@@ -95,7 +95,7 @@ $ppn=16;
 while ($n<=$MaxNumberofSamples+1) {
 	$n=$n+1;
 	$nstr001= sprintf ("%03d", $n-1);
-	$walltime=(($n==1)?"01":(($aln eq "novoalign")?"48":"24"));
+	$walltime=(($n==1)?"01":(($aln eq "novoalign")?"32":"16"));
 	$Sample=$DATA_DIR."/".$SampleID."-".$nstr001;
 	$Sample_R1=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R1";
 	$Sample_R2=$DATA_DIR."/fastq/".$SampleID."-".$nstr001."-R2";
@@ -113,7 +113,7 @@ if(-e $Sample_R1.".fastq" && -e $Sample_R2.".fastq"){
 	print $n1.": ";
 	print $SampleID."-".$nstr001."-R1/R2.fastq  -->  ";
 	print $pbsfile."\n";
-	print OUT1 "\nqsub ".$pbsfile;	
+	if ($n>1){print OUT1 "\nqsub ".$pbsfile;	}
 
 	if ($aln eq "bwa")
 	{	
@@ -145,18 +145,53 @@ $Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.sam I=$OUTPUT-R1-un
 #	print "Alignment tool is novoalign";
 	
 $Aln_comand="
+
+echo Split the FASTQ files into eight pieces.
+
+ngsutilsj fastq-split -n 16 $Sample_R1-paired.fq &
+ngsutilsj fastq-split -n 16 $Sample_R2-paired.fq &
+
+wait
+
+echo Aligning the reads to ref_genome
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.0.fastq $Sample_R2-paired.0.fastq > $OUTPUT-paired.0.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.1.fastq $Sample_R2-paired.1.fastq > $OUTPUT-paired.1.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.2.fastq $Sample_R2-paired.2.fastq > $OUTPUT-paired.2.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.3.fastq $Sample_R2-paired.3.fastq > $OUTPUT-paired.3.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.4.fastq $Sample_R2-paired.4.fastq > $OUTPUT-paired.4.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.5.fastq $Sample_R2-paired.5.fastq > $OUTPUT-paired.5.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.6.fastq $Sample_R2-paired.6.fastq > $OUTPUT-paired.6.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.7.fastq $Sample_R2-paired.7.fastq > $OUTPUT-paired.7.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.8.fastq $Sample_R2-paired.8.fastq > $OUTPUT-paired.8.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.9.fastq $Sample_R2-paired.9.fastq > $OUTPUT-paired.9.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.10.fastq $Sample_R2-paired.10.fastq > $OUTPUT-paired.10.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.11.fastq $Sample_R2-paired.11.fastq > $OUTPUT-paired.11.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.12.fastq $Sample_R2-paired.12.fastq > $OUTPUT-paired.12.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.13.fastq $Sample_R2-paired.13.fastq > $OUTPUT-paired.13.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.14.fastq $Sample_R2-paired.14.fastq > $OUTPUT-paired.14.sam &
+
+time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-paired.15.fastq $Sample_R2-paired.15.fastq > $OUTPUT-paired.15.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R1-unpaired.fq > $OUTPUT-R1-unpaired.sam &
+
 time $novoalign -d $novoindex_ref_genome -r None -o Sam -f $Sample_R2-unpaired.fq > $OUTPUT-R2-unpaired.sam &";
 
-$Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.0.sam I=$OUTPUT-paired.1.sam I=$OUTPUT-paired.2.sam I=$OUTPUT-paired.3.sam I=$OUTPUT-paired.4.sam I=$OUTPUT-paired.5.sam I=$OUTPUT-paired.6.sam I=$OUTPUT-paired.7.sam I=$OUTPUT-R1-unpaired.sam I=$OUTPUT-R2-unpaired.sam O=$OUTPUT.sam"
+$Combine_comand="time $PICARD MergeSamFiles I=$OUTPUT-paired.0.sam I=$OUTPUT-paired.1.sam I=$OUTPUT-paired.2.sam I=$OUTPUT-paired.3.sam I=$OUTPUT-paired.4.sam I=$OUTPUT-paired.5.sam I=$OUTPUT-paired.6.sam I=$OUTPUT-paired.7.sam I=$OUTPUT-paired.8.sam I=$OUTPUT-paired.9.sam I=$OUTPUT-paired.10.sam I=$OUTPUT-paired.11.sam I=$OUTPUT-paired.12.sam I=$OUTPUT-paired.13.sam I=$OUTPUT-paired.14.sam I=$OUTPUT-paired.15.sam I=$OUTPUT-R1-unpaired.sam I=$OUTPUT-R2-unpaired.sam O=$OUTPUT.sam"
 
 	}
 open OUT, ">$pbsfile" or die "cannot open file: $!";
@@ -281,7 +316,8 @@ echo ===============================================================
 set -x
 module load java
 time $PICARD MarkDuplicates INPUT=$OUTPUT-qFf-RG_Sorted.bam OUTPUT=$OUTPUT-qFf-RG_Sorted_dedup.bam METRICS_FILE=$OUTPUT-qFf-metrics.txt
-    
+
+set +x  
 echo ===============================================================
 echo 9. Index the BAM file using Picard.
 echo ===============================================================
@@ -378,8 +414,8 @@ $n1 pbs files are produced and saved in:
   $aln-$SampleID-$n.pbs
 ============================================================
 To submit all of the pbs jobs, type the following commands: 
-   chmod 755 ./qsub_all_pbs-$aln.sh 
-   ./qsub_all_pbs-$aln.sh 
+   chmod 755 ./qsub_all_pbs-$aln-$SampleID.sh 
+   ./qsub_all_pbs-$aln-$SampleID.sh 
 ============================================================
 Before submitting these pbs files, reference genome index files
 must first be made by using the following commands: 
