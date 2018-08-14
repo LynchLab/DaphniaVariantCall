@@ -2,19 +2,26 @@
 
 #alignment tool: bwa, hisat, or novoalign
 
-print "\n\n This program is useful for genome mapping in large scale. It  produces the enome mapping pipeline pbs files for large number of pair-ended reads:
+print "\n This program is useful for large-scale genome mapping. 
+It produces hundreds of genome mapping pipeline torque (.pbs) files for 
+large number of NGS pair-ended reads:
 
-	Usage: perl MGMP.pl <aln> <data_path> <output>
+	Usage: perl MGMP.pl <aln> <ref_genome> <data_path> <output>
 	
 	aln = bwa / novoalign / hisat 
-	data_path = your data directory, your fastq files should be saved in a sub directory: /data_path/fastq/
+	ref_genome = the file name of the reference genome 
+	(file extension must be '.fasta' and should be omitted here)
+	data_path = your data directory, your fastq files should be saved in a sub directory: 
+				.../data_path/fastq/
 	output = the common initial of your output file names
 	
 	"; 
 	
-if(@ARGV != 3)
+if(@ARGV != 4)
 {
-	print "\n\n\t\tPlease input the <aln> <data path> and <output file name>.\n\n"; 
+	print "\n\n\t\tWrong number of args: @ARGV. 
+	Please input four args: 
+		<aln> <ref_genome> <data path> and <output file name>.\n\n"; 
 	exit
 }
 
@@ -22,52 +29,65 @@ $aln=lc($ARGV[0]);
 
 if ($aln eq "")
 {
-	print "\n\nYou have not selected a alignment tool. 
+	print "\nYou have not selected a alignment tool. 
 	The first input args is the alignment tool, 
-	it must be:  bwa, hisat, or novoalign.\n\n"; 
+	it must be:  bwa, hisat, or novoalign.\n"; 
 	exit
 }
-print "\n\nYou have selected the alignment tool: $aln\n\n";
+print "\nYou have selected the alignment tool: $aln\n";
 
 if ($aln ne "bwa"&&$aln ne "hisat"&&$aln ne "novoalign")
 {
-	print "\n\nThe 1st input (args) is invalid. 
+	print "\nThe 1st input (args) is invalid. 
 	The 1st args is the alignment tool, 
-	it must be: bwa, hisat, or novoalign.\n\n"; 
+	it must be: bwa, hisat, or novoalign.\n"; 
 	exit
 }
 
-$DATA_DIR=$ARGV[1];
+#path and file name of the reference genome and its index 
+
+$ref_genome_dir="/N/u/xw63/Carbonate/daphnia/genome_index";
+$ref_genome=$ARGV[1];
+if ($ref_genome eq "")
+{
+	print "\nPlease input name of the reference genome (the 2nd args).\n\n"; 
+	exit
+}
+
+if(!(-e "$ref_genome_dir/$ref_genome.fasta"))
+{
+	print "\nThe 2nd args: 
+		$ref_genome
+	should be the name of the reference genome, but it is not found:\n\n"; 
+	exit
+}
+#data directory
+
+$DATA_DIR=$ARGV[2];
 
 if(!(-e (glob($DATA_DIR))[0]))
 {
-	print "\n\nThe 2nd input (args) is the data directory. The data directory is not found:
-				$DATA_DIR
-	
-	"; 
+	print "\n\nThe 3rd args: 
+		$DATA_DIR
+	should be the data directory. The data directory is not found:\n\n"; 
 	exit
 }
 
-print "\n\n The data directory is:
+print "\nThe data directory is:
 				$DATA_DIR
 	"; 
 
-$SampleID=$ARGV[2]; 
+$SampleID=$ARGV[3]; 
 
 if ($SampleID eq "")
 {
-	print "\n\nPlease input a population/Sample ID (The 3rd args).\n\n"; 
+	print "\nPlease input a population/Sample ID (The 4th args).\n\n"; 
 	exit
 }
 
 $tmp_DIR=$DATA_DIR."/tmp";
 $MaxNumberofSamples=999;
 $emailaddress='ouqd@hotmail.com';
-
-#ref_genome index path and file
-$work_dir="/N/u/xw63/Carbonate/daphnia/genome_index";
-$ref_genome="PA42.4.1";
-
 
 # The paths to the software used in this pipeline
 # You must first make sure you have all these software installed and they are all functional
@@ -215,7 +235,7 @@ module load samtools
 module load java
 ulimit -s
 set -x
-cd $work_dir
+cd $ref_genome_dir
 mkdir $OUTPUT_DIR
 mkdir $tmp_DIR
 
@@ -419,12 +439,11 @@ To submit all of the pbs jobs, type the following commands:
 ============================================================
 Before submitting these pbs files, reference genome index files
 must first be made by using the following commands: 
- \$ samtools faidx $ref_genome.fasta 
- \$ bwa index $ref_genome.fasta 
- \$ hisat2-build $ref_genome.fasta $ref_genome 
- \$ $novoindex $novoindex_ref_genome $ref_genome.fasta 
- \$ rm $ref_genome.dict 
- \$ java -jar /N/soft/rhel6/picard/2.8.1/picard.jar  CreateSequenceDictionary R=PA42.4.1.fasta O=PA42.4.1.dict
+  samtools faidx $ref_genome.fasta 
+  bwa index $ref_genome.fasta 
+  hisat2-build $ref_genome.fasta $ref_genome 
+  $novoindex $novoindex_ref_genome $ref_genome.fasta 
+  java -jar /N/soft/rhel6/picard/2.8.1/picard.jar  CreateSequenceDictionary R=$ref_genome.fasta O=$ref_genome.dict
 ============================================================
  PLEASE NOTE: DO NOT excute the indexing commands repeatedly in the jobs,
  as it will cause a problem when one job is using the index files 
