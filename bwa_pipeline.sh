@@ -76,7 +76,7 @@ echo "Converting the sam file to bam."
 $samtools view -bS KAP-00074_PA42_with_mt.sam > KAP-00074_PA42_with_mt.bam
 
 # 5. Sort the BAM file using Picard.
-echo "Soring the bam file using Picard."
+echo "Sorting the bam file using Picard."
 $picard SortSam INPUT=KAP-00074_PA42_with_mt.bam OUTPUT=Sorted_KAP-00074_PA42_with_mt.bam SORT_ORDER=coordinate
 
 # 6. Add read groups to the sorted BAM file.
